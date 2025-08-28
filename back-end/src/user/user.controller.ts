@@ -7,6 +7,8 @@ import {
   Patch,
   Post,
 } from '@nestjs/common';
+import { PayloadDto } from 'src/auth/dto/payload.dto';
+import { TokenPayLoadParam } from 'src/auth/params/token-payload.param';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UserService } from './user.service';
@@ -27,17 +29,27 @@ export class UserController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.userService.findOne(id);
+  findOne(
+    @Param('id') id: string,
+    @TokenPayLoadParam() tokenPayload: PayloadDto,
+  ) {
+    return this.userService.findOne(id, tokenPayload);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    return this.userService.update(id, updateUserDto);
+  update(
+    @Param('id') id: string,
+    @Body() updateUserDto: UpdateUserDto,
+    @TokenPayLoadParam() tokenPayload: PayloadDto,
+  ) {
+    return this.userService.update(id, updateUserDto, tokenPayload);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.userService.remove(id);
+  remove(
+    @Param('id') id: string,
+    @TokenPayLoadParam() tokenPayload: PayloadDto,
+  ) {
+    return this.userService.remove(id, tokenPayload);
   }
 }

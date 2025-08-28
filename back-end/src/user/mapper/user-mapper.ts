@@ -1,23 +1,18 @@
+import { Injectable } from '@nestjs/common';
+import { plainToInstance } from 'class-transformer';
 import { CreateUserDto } from '../dto/create-user.dto';
 import { ResponseDtoUser } from '../dto/response-user.dto';
 import { User } from '../entities/user.entity';
 
+@Injectable()
 export class UserMapper {
   toEntity(dto: CreateUserDto): User {
-    const user = new User();
-    user.name = dto.name;
-    user.email = dto.email;
-    user.password = dto.password;
-    return user;
+    return plainToInstance(User, dto);
   }
 
   toResponse(user: User): ResponseDtoUser {
-    const dto = new ResponseDtoUser();
-    dto.id = user.id;
-    dto.name = user.name;
-    dto.email = user.email;
-    dto.createdAt = user.createdAt;
-    dto.updatedAt = user.updatedAt;
-    return dto;
+    return plainToInstance(ResponseDtoUser, user, {
+      excludeExtraneousValues: true,
+    });
   }
 }
