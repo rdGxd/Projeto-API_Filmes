@@ -22,10 +22,10 @@ export class User {
   password: string;
 
   @CreateDateColumn()
-  createdAt: string;
+  createdAt: Date;
 
   @UpdateDateColumn()
-  updatedAt: string;
+  updatedAt: Date;
 
   @Column({ type: 'enum', enum: Roles, array: true, default: [Roles.User] })
   roles: Roles[];
