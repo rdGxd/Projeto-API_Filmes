@@ -1,8 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { SetRoutePolicy } from 'src/auth/decorators/set-route-policy.decorator';
 import { PayloadDto } from 'src/auth/dto/payload.dto';
-import { Roles } from 'src/auth/enums/roles.enums';
 import { HashingProtocol } from 'src/auth/hashing/hashing-protocol';
 import { Repository } from 'typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -25,13 +23,11 @@ export class UserService {
     return this.userMapper.toResponse(user);
   }
 
-  @SetRoutePolicy(Roles.Admin)
   async findAll() {
     const allUsers = await this.userRepository.find();
     return allUsers.map((user) => this.userMapper.toResponse(user));
   }
 
-  @SetRoutePolicy(Roles.Admin, Roles.User)
   async findOne(id: string, payload: PayloadDto) {
     const user = await this.userRepository.findOneBy({ id });
     if (!user) {
@@ -43,7 +39,6 @@ export class UserService {
     return this.userMapper.toResponse(user);
   }
 
-  @SetRoutePolicy(Roles.Admin, Roles.User)
   async update(
     id: string,
     updateUserDto: UpdateUserDto,
@@ -64,7 +59,6 @@ export class UserService {
     return this.userMapper.toResponse(user);
   }
 
-  @SetRoutePolicy(Roles.Admin, Roles.User)
   async remove(id: string, payload: PayloadDto) {
     const user = await this.userRepository.findOneBy({ id });
     if (!user) {
