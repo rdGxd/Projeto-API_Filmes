@@ -1,8 +1,10 @@
-import { Roles } from 'src/auth/enums/roles.enums';
+import { Roles } from 'src/common/enums/roles.enums';
+import { Favorite } from 'src/favorite/entities/favorite.entity';
 import {
   Column,
   CreateDateColumn,
   Entity,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
@@ -29,4 +31,7 @@ export class User {
 
   @Column({ type: 'enum', enum: Roles, array: true, default: [Roles.User] })
   roles: Roles[];
+
+  @OneToMany(() => Favorite, (favorite) => favorite.user)
+  favorites: Favorite[];
 }

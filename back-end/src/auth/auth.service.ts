@@ -1,18 +1,17 @@
 import { Inject, Injectable, UnauthorizedException } from '@nestjs/common';
 import type { ConfigType } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
-import { InjectRepository } from '@nestjs/typeorm';
+import { HashingProtocol } from 'src/common/hashing/hashing-protocol';
 import { User } from 'src/user/entities/user.entity';
-import { Repository } from 'typeorm';
-import jwtConfig from './config/jwt.config';
+import { UserService } from 'src/user/service/user.service';
+import jwtConfig from '../config/jwt.config';
 import { LoginDto } from './dto/login-auth.dto';
 import { RefreshTokenDto } from './dto/refresh-token.dto';
-import { HashingProtocol } from './hashing/hashing-protocol';
 
 @Injectable()
 export class AuthService {
   constructor(
-    @InjectRepository(User) private readonly userRepository: Repository<User>,
+    private readonly userService: UserService,
     @Inject(jwtConfig.KEY)
     private readonly jwtConfiguration: ConfigType<typeof jwtConfig>,
     private readonly hashingService: HashingProtocol,
@@ -20,7 +19,7 @@ export class AuthService {
   ) {}
 
   async login(dto: LoginDto) {
-    const user = await this.userRepository.findOneBy({ email: dto.email });
+    const user = await this.userService.findByEmail(dto.email);
 
     if (!user) throw new UnauthorizedException('Invalid credentials');
 
@@ -38,7 +37,7 @@ export class AuthService {
         this.jwtConfiguration,
       );
 
-      const user = await this.userRepository.findOneBy({ id: sub });
+      const user = await this.userService.findById(sub);
 
       if (!user) throw new UnauthorizedException('User not found');
 
@@ -77,7 +76,7 @@ export class AuthService {
         this.jwtConfiguration,
       );
 
-      const user = await this.userRepository.findOneBy({ id: sub });
+      const user = await this.userService.findById(sub);
 
       if (!user) throw new UnauthorizedException('User not found');
 

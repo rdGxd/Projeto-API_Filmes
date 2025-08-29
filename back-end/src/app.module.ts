@@ -1,21 +1,29 @@
-import { Module } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
+import { Logger, Module } from '@nestjs/common';
 import { AuthModule } from './auth/auth.module';
-import { TypeOrmModuleConfig } from './global/typer-orm.config';
-import { UserModule } from './user/user.module';
+import { FavoriteModule } from './favorite/favorite.module';
+
+import { AppConfiguration } from './config';
+import { TypeOrmModuleConfig } from './config/type-orm.config';
 import { MovieModule } from './movie/movie.module';
+import { UserModule } from './user/user.module';
 
 @Module({
   imports: [
-    ConfigModule.forRoot({
-      isGlobal: true,
-    }),
+    ...AppConfiguration().imports,
+    TypeOrmModuleConfig,
     UserModule,
     AuthModule,
-    TypeOrmModuleConfig,
     MovieModule,
+    FavoriteModule,
   ],
-  controllers: [],
-  providers: [],
+  providers: [...AppConfiguration().providers],
 })
-export class AppModule {}
+export class AppModule {
+  private readonly logger = new Logger(AppModule.name);
+
+  onModuleInit() {
+    this.logger.debug(
+      `O ambiente de execução é: ${process.env.NODE_ENV} e o arquivo é: env.${process.env.NODE_ENV}.local`,
+    );
+  }
+}

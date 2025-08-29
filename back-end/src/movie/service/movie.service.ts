@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { CreateMovieDto } from './dto/create-movie.dto';
-import { UpdateMovieDto } from './dto/update-movie.dto';
-import { Movie } from './entities/movie.entity';
-import { MovieMapper } from './mapper/movie-mapper';
+import { CreateMovieDto } from '../dto/create-movie.dto';
+import { UpdateMovieDto } from '../dto/update-movie.dto';
+import { Movie } from '../entities/movie.entity';
+import { MovieMapper } from '../mapper/movie-mapper';
 
 @Injectable()
 export class MovieService {
@@ -32,7 +32,7 @@ export class MovieService {
   }
 
   async update(id: string, updateMovieDto: UpdateMovieDto) {
-    const movie = await this.movieRepository.findOneBy({ id });
+    const movie = await this.findById(id);
     if (!movie) throw new Error('Movie not found');
     this.movieRepository.merge(movie, updateMovieDto);
     await this.movieRepository.save(movie);
@@ -61,5 +61,11 @@ export class MovieService {
   async filterRating(rating: string) {
     const movies = await this.movieRepository.find({ where: { rating } });
     return movies.map((movie) => this.movieMapper.toResponse(movie));
+  }
+
+  async findById(id: string) {
+    const movie = await this.movieRepository.findOneBy({ id });
+    if (!movie) throw new Error('Movie not found');
+    return movie;
   }
 }

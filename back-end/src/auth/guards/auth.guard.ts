@@ -7,17 +7,15 @@ import {
 } from '@nestjs/common';
 import type { ConfigType } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
-import { InjectRepository } from '@nestjs/typeorm';
 import { Request } from 'express';
-import { User } from 'src/user/entities/user.entity';
-import { Repository } from 'typeorm';
-import jwtConfig from '../config/jwt.config';
+import { UserService } from 'src/user/service/user.service';
+import jwtConfig from '../../config/jwt.config';
 import { REQUEST_TOKEN_PAYLOAD_KEY } from '../constants/auth.constants';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
   constructor(
-    @InjectRepository(User) private readonly userRepository: Repository<User>,
+    private readonly userService: UserService,
     private readonly jwtService: JwtService,
     @Inject(jwtConfig.KEY)
     private readonly jwtConfiguration: ConfigType<typeof jwtConfig>,
@@ -37,7 +35,7 @@ export class AuthGuard implements CanActivate {
         this.jwtConfiguration,
       );
 
-      const user = await this.userRepository.findOneBy({ id: payload.sub });
+      const user = await this.userService.findById(payload.sub);
 
       if (!user) {
         throw new UnauthorizedException('User not found');

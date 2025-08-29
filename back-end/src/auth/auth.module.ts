@@ -1,32 +1,24 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { User } from 'src/user/entities/user.entity';
+import { HashingModule } from 'src/common/hashing/hashing.module';
+import { UserModule } from 'src/user/user.module';
+import jwtConfig from '../config/jwt.config';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
-import jwtConfig from './config/jwt.config';
+import { AuthAndPolicyGuard } from './guards/auth-and-policy.guard';
 import { AuthGuard } from './guards/auth.guard';
 import { RolesGuard } from './guards/roles.guard';
-import { BcryptService } from './hashing/BCryptHash';
-import { HashingProtocol } from './hashing/hashing-protocol';
 
 @Module({
   controllers: [AuthController],
-  providers: [
-    AuthService,
-    {
-      provide: HashingProtocol,
-      useClass: BcryptService,
-    },
-    RolesGuard,
-    AuthGuard,
-  ],
+  providers: [AuthService, RolesGuard, AuthGuard, AuthAndPolicyGuard],
   imports: [
-    TypeOrmModule.forFeature([User]),
+    UserModule,
     ConfigModule.forFeature(jwtConfig),
     JwtModule.registerAsync(jwtConfig.asProvider()),
+    HashingModule,
   ],
-  exports: [AuthService, HashingProtocol, JwtModule, AuthGuard, RolesGuard],
+  exports: [AuthService, JwtModule, AuthGuard, RolesGuard, AuthAndPolicyGuard],
 })
 export class AuthModule {}

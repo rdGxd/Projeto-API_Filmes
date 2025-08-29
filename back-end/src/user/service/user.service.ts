@@ -1,12 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { PayloadDto } from 'src/auth/dto/payload.dto';
-import { HashingProtocol } from 'src/auth/hashing/hashing-protocol';
+import { HashingProtocol } from 'src/common/hashing/hashing-protocol';
 import { Repository } from 'typeorm';
-import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
-import { User } from './entities/user.entity';
-import { UserMapper } from './mapper/user-mapper';
+import { CreateUserDto } from '../dto/create-user.dto';
+import { UpdateUserDto } from '../dto/update-user.dto';
+import { User } from '../entities/user.entity';
+import { UserMapper } from '../mapper/user-mapper';
 
 @Injectable()
 export class UserService {
@@ -69,5 +69,13 @@ export class UserService {
     }
 
     return await this.userRepository.remove(user);
+  }
+
+  async findByEmail(email: string): Promise<User | null> {
+    return await this.userRepository.findOneBy({ email });
+  }
+
+  async findById(id: string): Promise<User | null> {
+    return await this.userRepository.findOneBy({ id });
   }
 }

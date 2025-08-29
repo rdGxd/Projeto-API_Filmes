@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { plainToInstance } from 'class-transformer';
 import { CreateMovieDto } from '../dto/create-movie.dto';
+import { ResponseMovieDto } from '../dto/response-movie.dto';
 import { Movie } from '../entities/movie.entity';
 
 @Injectable()
@@ -9,7 +10,7 @@ export class MovieMapper {
     return plainToInstance(Movie, dto);
   }
 
-  toResponse(movie: Movie) {
-    return plainToInstance(CreateMovieDto, movie);
+  toResponse(movie: Movie): ResponseMovieDto {
+    return plainToInstance(ResponseMovieDto, movie);
   }
 }

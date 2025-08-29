@@ -1,10 +1,10 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { PipesConfig } from './global/pipes.config';
+import { AppConfiguration } from './config';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  app.useGlobalPipes(...PipesConfig);
+  app.useGlobalPipes(...AppConfiguration().pipes);
   await app.listen(process.env.APP_PORT ?? 3001);
 }
 void bootstrap();

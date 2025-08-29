@@ -1,13 +1,13 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { AuthModule } from 'src/auth/auth.module';
+import { HashingModule } from 'src/common/hashing/hashing.module';
+import { UserController } from './controller/user.controller';
 import { User } from './entities/user.entity';
 import { UserMapper } from './mapper/user-mapper';
-import { UserController } from './user.controller';
-import { UserService } from './user.service';
+import { UserService } from './service/user.service';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([User]), AuthModule],
+  imports: [TypeOrmModule.forFeature([User]), HashingModule],
   controllers: [UserController],
   providers: [UserService, UserMapper],
   exports: [UserService],

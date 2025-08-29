@@ -20,10 +20,8 @@ export class Movie {
   yearRelease: string;
   @Column()
   rating: string;
-
   @CreateDateColumn()
   createdAt: Date;
-
   @UpdateDateColumn()
   updatedAt: Date;
 }
