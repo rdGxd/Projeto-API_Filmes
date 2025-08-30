@@ -1,5 +1,5 @@
 import { SetMetadata } from '@nestjs/common';
-import { Roles } from 'src/common/enums/roles.enums';
+import { Roles } from 'src/common/enums/role.enum';
 import { ROUTE_POLICY_KEY } from '../constants/route.constants';
 
 export const SetRoutePolicy = (...args: Roles[]) => {

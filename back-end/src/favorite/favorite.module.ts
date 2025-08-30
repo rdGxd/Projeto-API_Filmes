@@ -3,10 +3,10 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from 'src/auth/auth.module';
 import { MovieModule } from 'src/movie/movie.module';
 import { UserModule } from 'src/user/user.module';
-import { FavoriteController } from './controller/favorite.controller';
+import { FavoriteController } from './controllers/favorite.controller';
 import { Favorite } from './entities/favorite.entity';
 import { FavoriteMapper } from './mapper/favorite-mapper';
-import { FavoriteService } from './service/favorite.service';
+import { FavoriteService } from './services/favorite.service';
 
 @Module({
   controllers: [FavoriteController],

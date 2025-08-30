@@ -1,12 +1,15 @@
 import { Module } from '@nestjs/common';
-import { BcryptService } from './bcrypt.service';
+import { ConfigModule } from '@nestjs/config';
+import hashingConfig from '../config/hashing.config';
+import { SecureHashingService } from './hashing.service';
 import { HashingProtocol } from './hashing-protocol';
 
 @Module({
+  imports: [ConfigModule.forFeature(hashingConfig)],
   providers: [
     {
       provide: HashingProtocol,
-      useClass: BcryptService,
+      useClass: SecureHashingService,
     },
   ],
   exports: [HashingProtocol],

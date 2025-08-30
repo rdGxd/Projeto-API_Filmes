@@ -1,5 +1,6 @@
-import { Roles } from 'src/common/enums/roles.enums';
+import { Roles } from 'src/common/enums/role.enum';
 import { Favorite } from 'src/favorite/entities/favorite.entity';
+import { Review } from 'src/review/entities/review.entity';
 import {
   Column,
   CreateDateColumn,
@@ -32,6 +33,14 @@ export class User {
   @Column({ type: 'enum', enum: Roles, array: true, default: [Roles.User] })
   roles: Roles[];
 
-  @OneToMany(() => Favorite, (favorite) => favorite.user)
+  @OneToMany(() => Favorite, (favorite) => favorite.user, {
+    onDelete: 'CASCADE',
+  })
   favorites: Favorite[];
+
+  @OneToMany(() => Review, (review) => review.user, {
+    eager: true,
+    onDelete: 'CASCADE',
+  })
+  reviews: Review[];
 }

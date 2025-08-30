@@ -1,25 +1,18 @@
-import { Expose } from 'class-transformer';
-import { IsEmail, IsString, IsUUID } from 'class-validator';
+import { ResponseFavoriteDto } from 'src/favorite/dto/response-favorite.dto';
+import { ResponseReviewDto } from 'src/review/dto/response-review.dto';
 
-export class ResponseDtoUser {
-  @IsString()
-  @IsUUID()
-  @Expose()
+export class ResponseUserDto {
   id: string;
 
-  @IsString()
-  @Expose()
   name: string;
 
-  @IsEmail()
-  @Expose()
   email: string;
 
-  @IsString()
-  @Expose()
   createdAt: string;
 
-  @IsString()
-  @Expose()
   updatedAt: string;
+
+  favorites: ResponseFavoriteDto[];
+
+  reviews: ResponseReviewDto[];
 }

@@ -1,24 +1,14 @@
-import { IsDate, IsString } from 'class-validator';
+import { ResponseReviewDto } from 'src/review/dto/response-review.dto';
 
 export class ResponseMovieDto {
-  @IsString()
-  idFavorite: string;
-  @IsString()
-  userId: string;
-  @IsString()
-  movieId: string;
-  @IsString()
-  movieTitle: string;
-  @IsString()
-  movieDescription: string;
-  @IsString()
-  movieRating: string;
-  @IsString()
-  movieGenre: string;
-  @IsString()
-  movieYearRelease: string;
-  @IsDate()
+  id: string;
+  title: string;
+  description: string;
+  rating: number;
+  genre: string;
+  yearRelease: number;
   createdAt: Date;
-  @IsDate()
   updatedAt: Date;
+
+  reviews: ResponseReviewDto[];
 }
