@@ -19,8 +19,8 @@ export class UserService {
   async create(createUserDto: CreateUserDto) {
     const user = this.userMapper.toEntity(createUserDto);
     user.password = await this.bcryptService.hash(user.password);
-    await this.userRepository.save(user);
-    return this.userMapper.toResponse(user);
+    const saved = await this.userRepository.save(user);
+    return this.userMapper.toResponse(saved);
   }
 
   async findAll() {
