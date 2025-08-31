@@ -1,6 +1,26 @@
-import { BadRequestException, ValidationPipe } from '@nestjs/common';
+import {
+  BadRequestException,
+  INestApplication,
+  ValidationPipe,
+} from '@nestjs/common';
+import * as csurf from 'csurf';
+import helmet from 'helmet';
 
-export const PipesConfig = [
+export const MainConfig = async (app: INestApplication) => {
+  app.useGlobalPipes(...PipesConfig);
+
+  if (process.env.NODE_ENV === 'production') {
+    app.use(helmet());
+    app.enableCors({
+      origin: ['https://meuapp.com.br', 'http://localhost:3000'],
+    });
+    app.use(csurf.default());
+  }
+
+  await app.listen(process.env.APP_PORT ?? 3001);
+};
+
+const PipesConfig = [
   new ValidationPipe({
     // Sanitização automática
     whitelist: true, // Remove propriedades não definidas no DTO
