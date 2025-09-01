@@ -1,6 +1,6 @@
 "use client";
 
-import { DataTable } from "@/components/data-table";
+import { SimpleDataTable } from "@/components/simple-data-table";
 import { movieService } from "@/services/movieService";
 import { GetMovies } from "@/types/movie";
 import { useEffect, useState } from "react";
@@ -9,12 +9,21 @@ export default function MoviesTable() {
   const [movies, setMovies] = useState<GetMovies[]>([]);
 
   useEffect(() => {
+    let isMounted = true;
+
     const fetchMovies = async () => {
       const movies: GetMovies[] = await movieService.getAll();
-      setMovies(movies);
+      if (isMounted) {
+        setMovies(movies);
+      }
     };
+
     fetchMovies();
+
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
-  return <DataTable data={movies} />;
+  return <SimpleDataTable data={movies} />;
 }

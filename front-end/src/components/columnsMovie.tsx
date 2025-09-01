@@ -1,3 +1,5 @@
+"use client";
+
 import { GetMovies } from "@/types/movie";
 import { ColumnDef } from "@tanstack/react-table";
 import { formatDate } from "../utils/date";
@@ -17,11 +19,13 @@ export const columns: ColumnDef<GetMovies>[] = columnDefs.map((col) => ({
   header: col.label,
   cell: ({ row }) => {
     const value = row.original[col.key];
+
     if (col.isDate && typeof value === "string") {
       return <div className="p-2">{formatDate(value)}</div>;
     }
+
     return (
-      <div className="truncate max-w-xs p-2 cursor-pointer" title={String(value)}>
+      <div className="truncate max-w-xs p-2" title={String(value)}>
         {value}
       </div>
     );

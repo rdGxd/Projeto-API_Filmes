@@ -1,9 +1,9 @@
 import { AppSidebar } from "@/components/app-sidebar";
 import { SiteHeader } from "@/components/site-header";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
-import MoviesTable from "./MoviesTable";
+import MoviesTable from "../../components/moviesTables/MoviesTable";
 
-export default async function Page() {
+export default function Page() {
   return (
     <SidebarProvider
       style={
