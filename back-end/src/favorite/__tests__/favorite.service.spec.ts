@@ -240,7 +240,7 @@ describe('FavoriteService', () => {
 
       expect(favoriteRepository.find).toHaveBeenCalledWith({
         where: { user: { id: mockPayload.sub } },
-        relations: ['movie'],
+        relations: ['user', 'movie'],
       });
       expect(favoriteMapper.toDto).toHaveBeenCalledTimes(favorites.length);
       expect(result).toEqual(expectedResponse);
@@ -272,7 +272,7 @@ describe('FavoriteService', () => {
 
       expect(favoriteRepository.findOne).toHaveBeenCalledWith({
         where: { id: mockFavorite.id, user: { id: mockPayload.sub } },
-        relations: ['movie'],
+        relations: ['user', 'movie'],
       });
       expect(favoriteMapper.toDto).toHaveBeenCalledWith(mockFavorite);
       expect(result).toEqual(expectedResponse);

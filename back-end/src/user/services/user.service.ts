@@ -1,4 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { PayloadDto } from 'src/auth/dto/payload.dto';
 import { HashingProtocol } from 'src/common/hashing/hashing-protocol';
@@ -36,10 +40,10 @@ export class UserService {
       relations: ['favorites', 'reviews'],
     });
     if (!user) {
-      throw new Error('User not found');
+      throw new NotFoundException('User not found');
     }
     if (user.id !== payload.sub) {
-      throw new Error('Unauthorized');
+      throw new UnauthorizedException('Unauthorized');
     }
     return this.userMapper.toResponse(user);
   }
@@ -55,11 +59,11 @@ export class UserService {
     });
 
     if (!user) {
-      throw new Error('User not found');
+      throw new NotFoundException('User not found');
     }
 
     if (user.id !== tokenPayload.sub) {
-      throw new Error('Unauthorized');
+      throw new UnauthorizedException('Unauthorized');
     }
 
     this.userRepository.merge(user, updateUserDto);
@@ -77,10 +81,10 @@ export class UserService {
   async remove(id: string, payload: PayloadDto) {
     const user = await this.userRepository.findOneBy({ id });
     if (!user) {
-      throw new Error('User not found');
+      throw new NotFoundException('User not found');
     }
     if (user.id !== payload.sub) {
-      throw new Error('Unauthorized');
+      throw new UnauthorizedException('Unauthorized');
     }
 
     return await this.userRepository.remove(user);

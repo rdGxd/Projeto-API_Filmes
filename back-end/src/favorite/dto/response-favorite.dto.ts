@@ -1,5 +1,5 @@
 export class ResponseFavoriteDto {
-  id: string;
+  idFavorite: string;
   user: {
     userId: string;
     userName: string;

@@ -274,7 +274,7 @@ describe('ReviewService', () => {
 
       expect(reviewRepository.find).toHaveBeenCalledWith({
         where: { user: { id: mockPayload.sub } },
-        relations: ['movie'],
+        relations: ['movie', 'user'],
       });
       expect(reviewMapper.toDto).toHaveBeenCalledTimes(reviews.length);
       expect(result).toEqual(expectedResponse);

@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { PayloadDto } from 'src/auth/dto/payload.dto';
 import { MovieService } from 'src/movie/services/movie.service';
@@ -23,12 +23,12 @@ export class FavoriteService {
     const movie = await this.movieService.findById(createFavoriteDto.movieId);
 
     if (!movie) {
-      throw new Error('Movie not found');
+      throw new NotFoundException('Movie not found');
     }
 
     const user = await this.userService.findById(payload.sub);
     if (!user || createFavoriteDto.userId !== payload.sub) {
-      throw new Error('User not found');
+      throw new NotFoundException('User not found');
     }
     const favorite = this.favoriteMapper.toEntity(user, movie);
     user.favorites = [...(user.favorites || []), favorite];
@@ -40,7 +40,7 @@ export class FavoriteService {
   async findAll(payload: PayloadDto) {
     const favorites = await this.favoriteRepository.find({
       where: { user: { id: payload.sub } },
-      relations: ['movie'],
+      relations: ['user', 'movie'],
     });
     return favorites.map((favorite) => this.favoriteMapper.toDto(favorite));
   }
@@ -48,11 +48,11 @@ export class FavoriteService {
   async findOne(id: string, payload: PayloadDto) {
     const favorite = await this.favoriteRepository.findOne({
       where: { id, user: { id: payload.sub } },
-      relations: ['movie'],
+      relations: ['user', 'movie'],
     });
 
     if (!favorite) {
-      throw new Error('Favorite not found');
+      throw new NotFoundException('Favorite not found');
     }
 
     return this.favoriteMapper.toDto(favorite);
@@ -68,7 +68,7 @@ export class FavoriteService {
     });
 
     if (!favorite) {
-      throw new Error('Favorite not found');
+      throw new NotFoundException('Favorite not found');
     }
     this.favoriteRepository.merge(favorite, {
       ...updateFavoriteDto,
@@ -84,7 +84,7 @@ export class FavoriteService {
     });
 
     if (!favorite) {
-      throw new Error('Favorite not found');
+      throw new NotFoundException('Favorite not found');
     }
     const deleted = await this.favoriteRepository.remove(favorite);
     return this.favoriteMapper.toDto(deleted);

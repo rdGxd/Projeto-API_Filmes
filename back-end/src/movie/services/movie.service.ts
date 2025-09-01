@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateMovieDto } from '../dto/create-movie.dto';
@@ -31,13 +31,13 @@ export class MovieService {
       where: { id },
       relations: ['reviews'],
     });
-    if (!movie) throw new Error('Movie not found');
+    if (!movie) throw new NotFoundException('Movie not found');
     return this.movieMapper.toResponse(movie);
   }
 
   async update(id: string, updateMovieDto: UpdateMovieDto) {
     const movie = await this.movieRepository.findOneBy({ id });
-    if (!movie) throw new Error('Movie not found');
+    if (!movie) throw new NotFoundException('Movie not found');
     this.movieRepository.merge(movie, {
       title: updateMovieDto.title,
       genre: updateMovieDto.genre,
@@ -51,7 +51,7 @@ export class MovieService {
 
   async remove(id: string) {
     const movie = await this.movieRepository.findOneBy({ id });
-    if (!movie) throw new Error('Movie not found');
+    if (!movie) throw new NotFoundException('Movie not found');
     await this.movieRepository.remove(movie);
     return this.movieMapper.toResponse(movie);
   }
@@ -75,11 +75,11 @@ export class MovieService {
 
   async findById(id: string) {
     const movie = await this.movieRepository.findOneBy({ id });
-    if (!movie) throw new Error('Movie not found');
+    if (!movie) throw new NotFoundException('Movie not found');
     return movie;
   }
 
   filterMovies(filterDto: FilterMovieDto) {
-    throw new Error('Method not implemented.');
+    throw new NotFoundException('Method not implemented.');
   }
 }

@@ -1,3 +1,4 @@
+import { BadRequestException } from '@nestjs/common';
 import { Transform } from 'class-transformer';
 
 /**
@@ -43,7 +44,7 @@ export function ValidateYear() {
     const currentYear = new Date().getFullYear();
 
     if (isNaN(yearNum) || yearNum < 1800 || yearNum > currentYear + 10) {
-      throw new Error(
+      throw new BadRequestException(
         `Invalid year: ${year}. Must be between 1800 and ${currentYear + 10}`,
       );
     }

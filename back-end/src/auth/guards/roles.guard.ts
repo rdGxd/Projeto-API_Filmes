@@ -26,7 +26,7 @@ export class RolesGuard implements CanActivate {
     ];
 
     if (!tokenPayload) {
-      throw new Error('Unauthorized');
+      throw new UnauthorizedException('Unauthorized');
     }
 
     const { roles }: { roles: Roles[] } = tokenPayload,

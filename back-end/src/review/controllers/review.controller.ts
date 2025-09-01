@@ -26,7 +26,6 @@ export class ReviewController {
     return this.reviewService.create(createReviewDto, payload);
   }
 
-  @Public()
   @Get()
   findAll(@TokenPayLoadParam() payload: PayloadDto) {
     return this.reviewService.findAll(payload);

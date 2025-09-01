@@ -9,6 +9,5 @@ export class ResponseMovieDto {
   yearRelease: number;
   createdAt: Date;
   updatedAt: Date;
-
   reviews: ResponseReviewDto[];
 }

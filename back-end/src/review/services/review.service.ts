@@ -1,4 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { PayloadDto } from 'src/auth/dto/payload.dto';
 import { MovieService } from 'src/movie/services/movie.service';
@@ -22,15 +26,15 @@ export class ReviewService {
   async create(createReviewDto: CreateReviewDto, payload: PayloadDto) {
     const user = await this.userService.findById(payload.sub);
     if (!user) {
-      throw new Error('User not found');
+      throw new NotFoundException('User not found');
     }
     if (createReviewDto.userId !== payload.sub) {
-      throw new Error('User ID mismatch');
+      throw new UnauthorizedException('User ID mismatch');
     }
 
     const movie = await this.movieService.findById(createReviewDto.movieId);
     if (!movie) {
-      throw new Error('Movie not found');
+      throw new NotFoundException('Movie not found');
     }
 
     const review = this.reviewMapper.toEntity(createReviewDto);
@@ -47,8 +51,9 @@ export class ReviewService {
   async findAll(payload: PayloadDto) {
     const reviews = await this.reviewRepository.find({
       where: { user: { id: payload.sub } },
-      relations: ['movie'],
+      relations: ['movie', 'user'],
     });
+    console.log(reviews);
     return reviews.map((review) =>
       this.reviewMapper.toDto(review, review.movie, review.user),
     );
@@ -59,7 +64,7 @@ export class ReviewService {
       where: { id, user: { id: payload.sub } },
       relations: ['movie', 'user'],
     });
-    if (!review) throw new Error('Review not found');
+    if (!review) throw new NotFoundException('Review not found');
     return this.reviewMapper.toDto(review, review.movie, review.user);
   }
 
@@ -72,7 +77,7 @@ export class ReviewService {
       where: { id, user: { id: payload.sub } },
       relations: ['movie', 'user'],
     });
-    if (!review) throw new Error('Review not found');
+    if (!review) throw new NotFoundException('Review not found');
     this.reviewRepository.merge(review, updateReviewDto);
     await this.reviewRepository.save(review);
     return this.reviewMapper.toDto(review, review.movie, review.user);
@@ -83,7 +88,7 @@ export class ReviewService {
       where: { id, user: { id: payload.sub } },
       relations: ['movie', 'user'],
     });
-    if (!review) throw new Error('Review not found');
+    if (!review) throw new NotFoundException('Review not found');
     await this.reviewRepository.remove(review);
     return this.reviewMapper.toDto(review, review.movie, review.user);
   }

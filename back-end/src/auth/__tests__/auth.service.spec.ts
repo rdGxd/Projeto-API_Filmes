@@ -190,7 +190,7 @@ describe('AuthService', () => {
 
       jest
         .spyOn(jwtService, 'verifyAsync')
-        .mockRejectedValue(new Error('Invalid token'));
+        .mockRejectedValue(new UnauthorizedException('Invalid token'));
 
       await expect(service.refreshTokens(refreshTokenDto)).rejects.toThrow(
         UnauthorizedException,
