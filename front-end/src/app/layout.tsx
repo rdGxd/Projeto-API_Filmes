@@ -2,6 +2,7 @@ import { ModeToggle } from "@/components/DarkMode/mode-toggle";
 import type { Metadata } from "next";
 import { ThemeProvider } from "next-themes";
 import { Geist, Geist_Mono } from "next/font/google";
+import { ToastContainer } from "react-toastify";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -31,6 +32,7 @@ export default function RootLayout({
           <div className="flex justify-end p-4">
             <ModeToggle />
           </div>
+          <ToastContainer />
           {children}
         </ThemeProvider>
       </body>

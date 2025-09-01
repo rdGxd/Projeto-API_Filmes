@@ -3,19 +3,23 @@ import {
   INestApplication,
   ValidationPipe,
 } from '@nestjs/common';
-import * as csurf from 'csurf';
 import helmet from 'helmet';
 
 export const MainConfig = async (app: INestApplication) => {
   app.useGlobalPipes(...PipesConfig);
 
-  if (process.env.NODE_ENV === 'production') {
-    app.use(helmet());
-    app.enableCors({
-      origin: ['https://meuapp.com.br', 'http://localhost:3000'],
-    });
-    app.use(csurf.default());
-  }
+  app.use(helmet());
+  app.enableCors({
+    origin: [
+      'http://localhost:3000',
+      'https://localhost:3000',
+      'http://localhost:3001',
+      'https://localhost:3001',
+    ],
+  });
+
+  // NOTE: Ativar apenas em produção
+  // app.use(csurf.default());
 
   await app.listen(process.env.APP_PORT ?? 3001);
 };
