@@ -1,4 +1,3 @@
-import { ModeToggle } from "@/components/DarkMode/mode-toggle";
 import type { Metadata } from "next";
 import { ThemeProvider } from "next-themes";
 import { Geist, Geist_Mono } from "next/font/google";
@@ -29,9 +28,6 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
-          <div className="flex justify-end p-4">
-            <ModeToggle />
-          </div>
           <ToastContainer />
           {children}
         </ThemeProvider>

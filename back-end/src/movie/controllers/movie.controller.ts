@@ -35,6 +35,13 @@ export class MovieController {
     return await this.movieService.create(createMovieDto);
   }
 
+  @Get()
+  @Public()
+  @HttpCode(HttpStatus.OK)
+  async findAll() {
+    return await this.movieService.findAll();
+  }
+
   @Get('search')
   @Public()
   @HttpCode(HttpStatus.OK)
