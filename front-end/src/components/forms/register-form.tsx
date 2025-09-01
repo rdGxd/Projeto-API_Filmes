@@ -18,6 +18,7 @@ export function RegisterForm({ className, ...props }: React.ComponentProps<"div"
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    toast.dismiss();
     e.preventDefault();
     setLoading(true);
 

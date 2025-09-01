@@ -9,6 +9,7 @@ import { api } from "@/services/api";
 import { loginUser, LoginUser } from "@/validators/loginForm";
 import Cookies from "js-cookie";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { FormEvent, useState } from "react";
 import { toast } from "react-toastify";
 import z from "zod";
@@ -17,19 +18,21 @@ export function LoginForm({ className, ...props }: React.ComponentProps<"div">) 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [IsLoading, setIsLoading] = useState(false);
+  const route = useRouter();
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    toast.dismiss();
     e.preventDefault();
     setIsLoading(true);
 
     try {
       const loginData: LoginUser = loginUser.parse({ email, password });
 
-      const response = await api.post("auth/login", loginData);
-      console.log(response)
-      if (response.status === 200) {
-        Cookies.set("accessToken", response.data.accessToken);
+      const { data } = await api.post("auth/login", loginData);
+      if (data) {
+        Cookies.set("accessToken", data.accessToken);
         toast.success("Login successful!");
+        route.push("/dashboard");
       } else {
         toast.error("Login failed. Please try again.");
       }
