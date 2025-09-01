@@ -21,6 +21,7 @@ export class MovieMapper {
       rating: movie.rating,
       createdAt: movie.createdAt,
       updatedAt: movie.updatedAt,
+      coverImage: movie.coverImage,
       reviews: (movie.reviews || []).map((review) =>
         plainToInstance(ResponseReviewDto, review),
       ),

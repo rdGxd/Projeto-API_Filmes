@@ -10,4 +10,5 @@ export class ResponseMovieDto {
   createdAt: Date;
   updatedAt: Date;
   reviews: ResponseReviewDto[];
+  coverImage: string;
 }

@@ -59,9 +59,9 @@ export class MovieController {
   }
 
   @Get(':id')
-  @HttpCode(HttpStatus.NO_CONTENT)
+  @HttpCode(HttpStatus.OK)
   @Public()
   async findOne(@Param('id', ParseUUIDPipe) id: string) {
-    await this.movieService.findOne(id);
+    return await this.movieService.findOne(id);
   }
 }

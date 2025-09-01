@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
 import { api } from "@/services/api";
-import { loginUser, LoginUser } from "@/validators/loginForm";
+import { loginUser, LoginUser } from "@/types/loginForm";
 import Cookies from "js-cookie";
 import Link from "next/link";
 import { useRouter } from "next/navigation";

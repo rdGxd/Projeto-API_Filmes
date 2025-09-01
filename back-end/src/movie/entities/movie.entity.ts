@@ -16,6 +16,8 @@ export class Movie {
   title: string;
   @Column()
   description: string;
+  @Column({ default: 'https://picsum.photos/200/300' })
+  coverImage: string;
   @Column()
   genre: string;
   @Column({ type: 'int' })

@@ -15,6 +15,7 @@ const getMovies = z.object({
   createdAt: z.string(),
   updatedAt: z.string(),
   reviews: z.array(z.any()).optional(),
+  coverImage: z.url().optional(),
 });
 
 export type CreateMovie = z.infer<typeof createMovie>;

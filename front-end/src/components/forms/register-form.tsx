@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
 import { api } from "@/services/api";
-import { registerUser, RegisterUser } from "@/validators/registerForm";
+import { registerUser, RegisterUser } from "@/types/registerForm";
 import { FormEvent, useState } from "react";
 import { toast } from "react-toastify";
 import z from "zod";
