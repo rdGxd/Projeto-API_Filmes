@@ -3,6 +3,8 @@ import {
   Controller,
   Delete,
   Get,
+  HttpCode,
+  HttpStatus,
   Param,
   Patch,
   Post,
@@ -19,35 +21,43 @@ export class ReviewController {
   constructor(private readonly reviewService: ReviewService) {}
 
   @Post()
-  create(
+  @HttpCode(HttpStatus.CREATED)
+  async create(
     @Body() createReviewDto: CreateReviewDto,
     @TokenPayLoadParam() payload: PayloadDto,
   ) {
-    return this.reviewService.create(createReviewDto, payload);
+    return await this.reviewService.create(createReviewDto, payload);
   }
 
   @Get()
-  findAll(@TokenPayLoadParam() payload: PayloadDto) {
-    return this.reviewService.findAll(payload);
+  @HttpCode(HttpStatus.OK)
+  async findAll(@TokenPayLoadParam() payload: PayloadDto) {
+    return await this.reviewService.findAll(payload);
   }
 
   @Public()
+  @HttpCode(HttpStatus.OK)
   @Get(':id')
-  findOne(@Param('id') id: string, @TokenPayLoadParam() payload: PayloadDto) {
-    return this.reviewService.findOne(id, payload);
+  async findOne(
+    @Param('id') id: string,
+    @TokenPayLoadParam() payload: PayloadDto,
+  ) {
+    return await this.reviewService.findOne(id, payload);
   }
 
   @Patch(':id')
-  update(
+  @HttpCode(HttpStatus.OK)
+  async update(
     @Param('id') id: string,
     @Body() updateReviewDto: UpdateReviewDto,
     @TokenPayLoadParam() payload: PayloadDto,
   ) {
-    return this.reviewService.update(id, updateReviewDto, payload);
+    return await this.reviewService.update(id, updateReviewDto, payload);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string, @TokenPayLoadParam() payload: PayloadDto) {
-    return this.reviewService.remove(id, payload);
+  @HttpCode(HttpStatus.NO_CONTENT)
+  async remove(@Param('id') id: string, @TokenPayLoadParam() payload: PayloadDto) {
+    await this.reviewService.remove(id, payload);
   }
 }

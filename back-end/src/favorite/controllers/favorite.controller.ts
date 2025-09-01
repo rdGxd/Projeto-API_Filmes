@@ -3,6 +3,8 @@ import {
   Controller,
   Delete,
   Get,
+  HttpCode,
+  HttpStatus,
   Param,
   Patch,
   Post,
@@ -21,34 +23,45 @@ export class FavoriteController {
   constructor(private readonly favoriteService: FavoriteService) {}
 
   @Post()
-  create(
+  @HttpCode(HttpStatus.CREATED)
+  async create(
     @Body() createFavoriteDto: CreateFavoriteDto,
     @TokenPayLoadParam() payload: PayloadDto,
   ) {
-    return this.favoriteService.create(createFavoriteDto, payload);
+    return await this.favoriteService.create(createFavoriteDto, payload);
   }
 
   @Get()
-  findAll(@TokenPayLoadParam() payload: PayloadDto) {
-    return this.favoriteService.findAll(payload);
+  @HttpCode(HttpStatus.OK)
+  async findAll(@TokenPayLoadParam() payload: PayloadDto) {
+    return await this.favoriteService.findAll(payload);
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string, @TokenPayLoadParam() payload: PayloadDto) {
-    return this.favoriteService.findOne(id, payload);
+  @HttpCode(HttpStatus.OK)
+  async findOne(
+    @Param('id') id: string,
+    @TokenPayLoadParam() payload: PayloadDto,
+  ) {
+    return await this.favoriteService.findOne(id, payload);
   }
 
   @Patch(':id')
-  update(
+  @HttpCode(HttpStatus.OK)
+  async update(
     @Param('id') id: string,
     @Body() updateFavoriteDto: UpdateFavoriteDto,
     @TokenPayLoadParam() payload: PayloadDto,
   ) {
-    return this.favoriteService.update(id, updateFavoriteDto, payload);
+    return await this.favoriteService.update(id, updateFavoriteDto, payload);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string, @TokenPayLoadParam() payload: PayloadDto) {
-    return this.favoriteService.remove(id, payload);
+  @HttpCode(HttpStatus.NO_CONTENT)
+  async remove(
+    @Param('id') id: string,
+    @TokenPayLoadParam() payload: PayloadDto,
+  ) {
+    await this.favoriteService.remove(id, payload);
   }
 }

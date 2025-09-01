@@ -3,6 +3,8 @@ import {
   ClassSerializerInterceptor,
   Controller,
   Get,
+  HttpCode,
+  HttpStatus,
   Param,
   ParseUUIDPipe,
   Post,
@@ -20,6 +22,7 @@ export class MovieController {
   constructor(private readonly movieService: MovieService) {}
 
   @Post()
+  @HttpCode(HttpStatus.CREATED)
   async create(@Body() createMovieDto: CreateMovieDto) {
     // Os dados já chegam validados e sanitizados aqui!
     console.log('Dados recebidos:', {
@@ -29,11 +32,12 @@ export class MovieController {
       year: createMovieDto.yearRelease, // String validada como ano
     });
 
-    return this.movieService.create(createMovieDto);
+    return await this.movieService.create(createMovieDto);
   }
 
   @Get('search')
   @Public()
+  @HttpCode(HttpStatus.OK)
   async search(@Query() filterDto: FilterMovieDto) {
     // Parâmetros de query já validados e sanitizados
     console.log('Filtros aplicados:', {
@@ -44,13 +48,13 @@ export class MovieController {
       limit: filterDto.limit, // Number entre 1-100
     });
 
-    return this.movieService.filterMovies(filterDto);
+    return await this.movieService.filterMovies(filterDto);
   }
 
   @Get(':id')
+  @HttpCode(HttpStatus.NO_CONTENT)
   @Public()
   async findOne(@Param('id', ParseUUIDPipe) id: string) {
-    // ParseUUIDPipe valida que o ID é um UUID válido
-    return this.movieService.findOne(id);
+    await this.movieService.findOne(id);
   }
 }

@@ -79,7 +79,22 @@ export class MovieService {
     return movie;
   }
 
-  filterMovies(filterDto: FilterMovieDto) {
-    throw new NotFoundException('Method not implemented.');
+  async filterMovies(filterDto: FilterMovieDto) {
+    const query = this.movieRepository.createQueryBuilder('movie');
+
+    if (filterDto.genre) {
+      query.andWhere('movie.genre = :genre', { genre: filterDto.genre });
+    }
+    if (filterDto.year) {
+      query.andWhere('movie.yearRelease = :year', { year: filterDto.year });
+    }
+    if (filterDto.minRating) {
+      query.andWhere('movie.rating >= :minRating', {
+        minRating: filterDto.minRating,
+      });
+    }
+
+    const movies = await query.getMany();
+    return movies.map((movie) => this.movieMapper.toResponse(movie));
   }
 }

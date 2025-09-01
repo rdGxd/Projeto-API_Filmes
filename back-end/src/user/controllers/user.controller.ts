@@ -3,6 +3,8 @@ import {
   Controller,
   Delete,
   Get,
+  HttpCode,
+  HttpStatus,
   Param,
   Patch,
   Post,
@@ -21,42 +23,47 @@ export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @Post()
+  @HttpCode(HttpStatus.CREATED)
   @Public()
-  create(@Body() createUserDto: CreateUserDto) {
-    return this.userService.create(createUserDto);
+  async create(@Body() createUserDto: CreateUserDto) {
+    return await this.userService.create(createUserDto);
   }
 
   @Get()
+  @HttpCode(HttpStatus.OK)
   @SetRoutePolicy(Roles.Admin)
-  findAll() {
-    return this.userService.findAll();
+  async findAll() {
+    return await this.userService.findAll();
   }
 
   @Get(':id')
+  @HttpCode(HttpStatus.OK)
   @SetRoutePolicy(Roles.Admin, Roles.User)
-  findOne(
+  async findOne(
     @Param('id') id: string,
     @TokenPayLoadParam() tokenPayload: PayloadDto,
   ) {
-    return this.userService.findOne(id, tokenPayload);
+    return await this.userService.findOne(id, tokenPayload);
   }
 
   @Patch(':id')
   @SetRoutePolicy(Roles.Admin, Roles.User)
-  update(
+  @HttpCode(HttpStatus.OK)
+  async update(
     @Param('id') id: string,
     @Body() updateUserDto: UpdateUserDto,
     @TokenPayLoadParam() tokenPayload: PayloadDto,
   ) {
-    return this.userService.update(id, updateUserDto, tokenPayload);
+    return await this.userService.update(id, updateUserDto, tokenPayload);
   }
 
   @Delete(':id')
+  @HttpCode(HttpStatus.NO_CONTENT)
   @SetRoutePolicy(Roles.Admin, Roles.User)
-  remove(
+  async remove(
     @Param('id') id: string,
     @TokenPayLoadParam() tokenPayload: PayloadDto,
   ) {
-    return this.userService.remove(id, tokenPayload);
+    await this.userService.remove(id, tokenPayload);
   }
 }
