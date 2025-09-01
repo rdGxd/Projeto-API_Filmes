@@ -6,22 +6,46 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
 import { api } from "@/services/api";
+import { loginUser, LoginUser } from "@/validators/loginForm";
 import Cookies from "js-cookie";
 import Link from "next/link";
 import { FormEvent, useState } from "react";
+import { toast } from "react-toastify";
+import z from "zod";
 
 export function LoginForm({ className, ...props }: React.ComponentProps<"div">) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [IsLoading, setIsLoading] = useState(false);
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setIsLoading(true);
+
     try {
-      const loginData = { email, password };
+      const loginData: LoginUser = loginUser.parse({ email, password });
+
       const response = await api.post("auth/login", loginData);
-      Cookies.set("accessToken", response.data.accessToken);
-    } catch (error) {
-      console.error("Login failed:", error);
+      console.log(response)
+      if (response.status === 200) {
+        Cookies.set("accessToken", response.data.accessToken);
+        toast.success("Login successful!");
+      } else {
+        toast.error("Login failed. Please try again.");
+      }
+    } catch (err: any) {
+      if (err instanceof z.ZodError) {
+        // Mensagens detalhadas do Zod
+        const messages = err.issues.map((e) => e.message).join(", ");
+        toast.error(messages);
+      } else if (err.response?.data?.message) {
+        // Mensagens do backend
+        toast.error(err.response.data.message);
+      } else {
+        toast.error("Falha no cadastro. Tente novamente.");
+      }
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -44,6 +68,7 @@ export function LoginForm({ className, ...props }: React.ComponentProps<"div">) 
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
+                  disabled={IsLoading}
                 />
               </div>
               <div className="grid gap-3">
@@ -59,11 +84,12 @@ export function LoginForm({ className, ...props }: React.ComponentProps<"div">) 
                   required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
+                  disabled={IsLoading}
                 />
               </div>
               <div className="flex flex-col gap-3">
-                <Button type="submit" className="w-full">
-                  Login
+                <Button type="submit" className="w-full" disabled={IsLoading}>
+                  {IsLoading ? "Logging in..." : "Login"}
                 </Button>
               </div>
             </div>
