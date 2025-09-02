@@ -4,8 +4,8 @@ import { LoginDto } from '../dto/login-auth.dto';
 import { RefreshTokenDto } from '../dto/refresh-token.dto';
 import { AuthService } from '../services/auth.service';
 
-@Public()
 @Controller('auth')
+@Public()
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 

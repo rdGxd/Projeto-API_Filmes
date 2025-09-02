@@ -27,8 +27,8 @@ export function LoginForm({ className, ...props }: React.ComponentProps<"div">) 
 
     try {
       const loginData: LoginUser = loginUser.parse({ email, password });
-
       const { data } = await api.post("auth/login", loginData);
+
       if (data) {
         Cookies.set("accessToken", data.accessToken);
         toast.success("Login successful!");

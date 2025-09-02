@@ -20,7 +20,6 @@ export class AuthService {
 
   async login(dto: LoginDto) {
     const user = await this.userService.findByEmail(dto.email);
-
     if (!user) throw new UnauthorizedException('Invalid credentials');
 
     if (!(await this.hashingService.compare(dto.password, user.password))) {

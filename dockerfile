@@ -6,7 +6,7 @@ WORKDIR /usr/src/app
 
 # Copiar package.json e instalar dependências
 COPY package*.json ./
-RUN npm install
+RUN pnpm install
 
 # Copiar o restante do código
 COPY . .
@@ -15,4 +15,4 @@ COPY . .
 EXPOSE 3001
 
 # Comando inicial (NestJS em modo dev)
-CMD ["npm", "run", "start:dev"]
+CMD ["pnpm", "run", "start:dev"]
