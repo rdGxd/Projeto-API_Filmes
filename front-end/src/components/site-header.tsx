@@ -10,7 +10,9 @@ export function SiteHeader() {
         <Separator orientation="vertical" className="mx-2 data-[orientation=vertical]:h-4" />
         <h1 className="text-base font-medium">API Movies </h1>
       </div>
-      <ModeToggle/>
+      <div className="p-2 ml-auto">
+        <ModeToggle />
+      </div>
     </header>
   );
 }

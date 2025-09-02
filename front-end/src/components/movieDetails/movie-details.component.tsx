@@ -16,5 +16,5 @@ export function MovieDetails(props: { readonly id: string }) {
     fetchMovie();
   }, [props.id]);
 
-  return movie && <OneMovie {...movie} />;
+  return <div>{movie && <OneMovie {...movie} />}</div>;
 }
