@@ -24,13 +24,13 @@ const data = {
   user,
   navMain: [
     {
-      title: "Dashboard",
+      title: "Todos os filmes",
       url: "/dashboard",
       icon: IconDashboard,
     },
     {
       title: "Favorites",
-      url: "/movies/favorites",
+      url: "/favorites",
       icon: IconChartBar,
     },
     {
