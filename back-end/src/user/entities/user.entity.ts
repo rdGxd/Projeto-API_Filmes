@@ -34,6 +34,7 @@ export class User {
   roles: Roles[];
 
   @OneToMany(() => Favorite, (favorite) => favorite.user, {
+    eager: true,
     onDelete: 'CASCADE',
   })
   favorites: Favorite[];

@@ -16,14 +16,18 @@ export class FavoriteMapper {
 
   toDto(entity: Favorite): ResponseFavoriteDto {
     return plainToInstance(ResponseFavoriteDto, {
-      idFavorite: entity.id,
+      id: entity.id,
       user: {
-        userId: entity.user.id,
-        userName: entity.user.name,
+        id: entity.user.id,
+        name: entity.user.name,
       },
       movie: {
-        movieId: entity.movie.id,
-        movieTitle: entity.movie.title,
+        id: entity.movie.id,
+        title: entity.movie.title,
+        description: entity.movie.description,
+        genre: entity.movie.genre,
+        yearRelease: entity.movie.yearRelease,
+        rating: entity.movie.rating,
       },
       createdAt: entity.createdAt,
       updatedAt: entity.updatedAt,

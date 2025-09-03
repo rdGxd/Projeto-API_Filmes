@@ -1,12 +1,16 @@
 export class ResponseFavoriteDto {
-  idFavorite: string;
+  id: string;
   user: {
-    userId: string;
-    userName: string;
+    id: string;
+    name: string;
   };
   movie: {
-    movieId: string;
-    movieTitle: string;
+    id: string;
+    title: string;
+    description: string;
+    genre: string;
+    yearRelease: number;
+    rating: number;
   };
   createdAt: Date;
   updatedAt: Date;

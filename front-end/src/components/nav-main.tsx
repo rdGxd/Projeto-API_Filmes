@@ -1,7 +1,5 @@
 "use client";
 
-import { IconCirclePlusFilled, type Icon } from "@tabler/icons-react";
-
 import {
   SidebarGroup,
   SidebarGroupContent,
@@ -9,6 +7,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
+import { IconCirclePlusFilled, type Icon } from "@tabler/icons-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
@@ -19,6 +18,7 @@ export function NavMain({
     readonly title: string;
     readonly url: string;
     readonly icon?: Icon;
+    readonly fn?: () => void;
   }[];
 }) {
   const router = useRouter();
@@ -44,7 +44,7 @@ export function NavMain({
         </SidebarMenu>
         <SidebarMenu>
           {items.map((item) => (
-            <Link href={item.url} key={item.title}>
+            <Link href={item.url} key={item.title} onClick={item.fn}>
               <SidebarMenuItem>
                 <SidebarMenuButton tooltip={item.title} className="cursor-pointer">
                   {item.icon && <item.icon />}

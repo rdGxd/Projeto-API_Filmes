@@ -12,16 +12,10 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
+import Cookies from "js-cookie";
 import Link from "next/link";
 
-const user = {
-  name: "shadcn",
-  email: "m@example.com",
-  avatar: "/avatars/shadcn.jpg",
-};
-
 const data = {
-  user,
   navMain: [
     {
       title: "Todos os filmes",
@@ -45,8 +39,11 @@ const data = {
     },
     {
       title: "Logout",
-      url: "/logout",
+      url: "/",
       icon: IconLogout,
+      fn: () => {
+        Cookies.remove("accessToken");
+      },
     },
   ],
 };

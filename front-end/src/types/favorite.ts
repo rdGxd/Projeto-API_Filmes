@@ -1,14 +1,17 @@
-import { apiWithAuth } from "@/services/api";
-
-export const favoriteService = {
-  addFavorite: async (movieId: string) => {
-    // Logic to add a movie to favorites
-  },
-  removeFavorite: async (movieId: string) => {
-    // Logic to remove a movie from favorites
-  },
-  getFavorites: async () => {
-    const { data } = await apiWithAuth.get("/favorite");
-    return data;
-  },
+export type TFavorite = {
+  id: string;
+  user: {
+    id: string;
+    name: string;
+  };
+  movie: {
+    id: string;
+    title: string;
+    description: string;
+    genre: string;
+    yearRelease: number;
+    rating: number;
+  };
+  createdAt: Date;
+  updatedAt: Date;
 };

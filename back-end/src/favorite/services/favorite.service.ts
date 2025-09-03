@@ -27,9 +27,10 @@ export class FavoriteService {
     }
 
     const user = await this.userService.findById(payload.sub);
-    if (!user || createFavoriteDto.userId !== payload.sub) {
+    if (!user) {
       throw new NotFoundException('User not found');
     }
+
     const favorite = this.favoriteMapper.toEntity(user, movie);
     user.favorites = [...(user.favorites || []), favorite];
     await this.favoriteRepository.save(favorite);
@@ -80,7 +81,11 @@ export class FavoriteService {
 
   async remove(id: string, payload: PayloadDto) {
     const favorite = await this.favoriteRepository.findOne({
-      where: { id, user: { id: payload.sub } },
+      where: {
+        id,
+        user: { id: payload.sub },
+      },
+      relations: ['user', 'movie'],
     });
 
     if (!favorite) {

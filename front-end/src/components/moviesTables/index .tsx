@@ -1,10 +1,12 @@
 "use client";
 
 import { SimpleDataTable } from "@/components/simple-data-table";
+import { favoriteService } from "@/services/favoriteService";
 import { movieService } from "@/services/movieService";
-import { favoriteService } from "@/types/favorite";
+import { TFavorite } from "@/types/favorite";
 import { GetMovies } from "@/types/movie";
 import { useEffect, useState } from "react";
+import { SimpleDataFavorite } from "../simple-data-favorite";
 
 type TMoviesTable = {
   mode: "favorite" | "list";
@@ -12,15 +14,16 @@ type TMoviesTable = {
 
 export default function MoviesTable({ mode }: TMoviesTable) {
   const [movies, setMovies] = useState<GetMovies[]>([]);
+  const [favorites, setFavorites] = useState<TFavorite[]>([]);
 
   useEffect(() => {
     let isMounted = true;
 
     if (mode === "favorite") {
       const fetchFavorites = async () => {
-        const favorites: GetMovies[] = await favoriteService.getFavorites();
+        const favorites: TFavorite[] = await favoriteService.getFavorites();
         if (isMounted) {
-          setMovies(favorites);
+          setFavorites(favorites);
         }
       };
 
@@ -43,5 +46,5 @@ export default function MoviesTable({ mode }: TMoviesTable) {
     };
   }, []);
 
-  return <SimpleDataTable data={movies} />;
+  return <>{mode === "favorite" ? <SimpleDataFavorite data={favorites} /> : <SimpleDataTable data={movies} />}</>;
 }
