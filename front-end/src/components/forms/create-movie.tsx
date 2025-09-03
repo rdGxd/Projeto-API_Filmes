@@ -44,10 +44,6 @@ export function CreateMovieForm({ className, ...props }: React.ComponentProps<"d
         setRating(0);
       }
     } catch (err: any) {
-      console.log("Erro completo:", err);
-      console.log("Response data:", err.response?.data);
-      console.log("Status:", err.response?.status);
-
       if (err.response?.data?.message) {
         toast.error(`Erro: ${err.response.data.message}`);
       } else {
@@ -101,6 +97,7 @@ export function CreateMovieForm({ className, ...props }: React.ComponentProps<"d
                   id="genreMovie"
                   disabled={isLoading}
                   value={genre}
+                  className="border border-gray-300 rounded px-3 py-2"
                   onChange={(e) => setGenre(e.target.value as genreEnum)}
                 >
                   {Object.values(genreEnum).map((value: string) => (

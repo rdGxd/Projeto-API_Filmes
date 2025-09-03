@@ -1,6 +1,6 @@
 "use client";
 
-import { OneMovie } from "@/components/data-table";
+import { MovieEdit } from "@/components/movie-edit";
 import { movieService } from "@/services/movieService";
 import { GetMovies } from "@/types/movie";
 import { useEffect, useState } from "react";
@@ -16,5 +16,5 @@ export function MovieDetails(props: { readonly id: string }) {
     fetchMovie();
   }, [props.id]);
 
-  return <div>{movie && <OneMovie {...movie} />}</div>;
+  return <div>{movie && <MovieEdit data={movie} setMovie={setMovie}  />}</div>;
 }

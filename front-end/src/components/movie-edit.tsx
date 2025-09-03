@@ -3,20 +3,28 @@
 import { movieService } from "@/services/movieService";
 import { CreateMovie, createMovie, genreEnum, GetMovies } from "@/types/movie";
 import { formatDate } from "@/utils/date";
+import { IconArrowLeft, IconArrowRight } from "@tabler/icons-react";
 import Image from "next/image";
-import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { Dispatch, SetStateAction, useState } from "react";
 import { toast } from "react-toastify";
 import { StarRating } from "./starRating";
 
-export function OneMovie(data: Readonly<GetMovies>) {
+type TMovieEdit = {
+  readonly data: GetMovies;
+  readonly setMovie: Dispatch<SetStateAction<GetMovies | undefined>>;
+};
+
+export function MovieEdit({ data, setMovie }: TMovieEdit) {
   const [showEdit, setShowEdit] = useState(false);
-  const [title, setTitle] = useState(data.title);
-  const [description, setDescription] = useState(data.description);
-  const [genre, setGenre] = useState<genreEnum>(data.genre as genreEnum);
-  const [coverImage, setCoverImage] = useState(data.coverImage);
-  const [yearRelease, setYearRelease] = useState<number>(data.yearRelease);
-  const [rating, setRating] = useState<number>(data.rating);
+  const [title, setTitle] = useState<GetMovies["title"]>(data.title);
+  const [description, setDescription] = useState<GetMovies["description"]>(data.description);
+  const [genre, setGenre] = useState<GetMovies["genre"]>(data.genre);
+  const [coverImage, setCoverImage] = useState<GetMovies["coverImage"]>(data.coverImage);
+  const [yearRelease, setYearRelease] = useState<GetMovies["yearRelease"]>(Number(data.yearRelease));
+  const [rating, setRating] = useState<GetMovies["rating"]>(Number(data.rating));
   const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
 
   const handleSave = async () => {
     setShowEdit(false);
@@ -31,9 +39,10 @@ export function OneMovie(data: Readonly<GetMovies>) {
         yearRelease,
         rating,
       });
-      const updatedMovie = await movieService.update("3a6f0c99-3ff8-4a00-ac77-7eb09f68c66f", updatedData);
+      const updatedMovie = await movieService.update(data.id, updatedData);
       if (updatedMovie) {
         toast.success("Filme atualizado com sucesso!");
+        setMovie(updatedMovie);
       }
     } catch (error) {
       toast.error("Erro ao atualizar filme.");
@@ -45,9 +54,13 @@ export function OneMovie(data: Readonly<GetMovies>) {
 
   return (
     <div className="max-w-3xl mx-auto mt-8 p-6  shadow-lg rounded-lg">
+      <div className="p-2 flex justify-between">
+        <IconArrowLeft onClick={() => router.back()} className="cursor-pointer" />
+        <IconArrowRight onClick={() => router.forward()} className="cursor-pointer" />
+      </div>
       {!showEdit && (
         <>
-          <h1 className="text-3xl font-bold mb-4">{data.title}</h1>
+          <h1 className="text-3xl font-bold mb-4 text-center">{data.title}</h1>
           <div className="flex justify-center p-4">
             <Image src={data.coverImage as string} alt={data.title} width={400} height={600} priority />
           </div>
@@ -77,7 +90,6 @@ export function OneMovie(data: Readonly<GetMovies>) {
           </button>
         </>
       )}
-
       {showEdit && (
         <div>
           <h2 className="text-2xl font-bold mb-4">Editar Filme</h2>
@@ -119,7 +131,7 @@ export function OneMovie(data: Readonly<GetMovies>) {
               disabled={isLoading}
             />
             <div className="flex justify-center p-4">
-              <Image src={coverImage || ""} alt={title} width={400} height={600} priority />
+              <Image src={coverImage || ""} alt={title || ""} width={400} height={600} priority />
             </div>
           </div>
           <div className="mb-4">
