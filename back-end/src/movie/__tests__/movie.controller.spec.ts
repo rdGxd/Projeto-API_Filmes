@@ -3,6 +3,7 @@ import { MovieController } from '../controllers/movie.controller';
 import { CreateMovieDto } from '../dto/create-movie.dto';
 import { FilterMovieDto } from '../dto/filter-movie.dto';
 import { MovieService } from '../services/movie.service';
+import { genreEnum } from '../enums/genreEnum';
 
 describe('MovieController', () => {
   let controller: MovieController;
@@ -39,7 +40,8 @@ describe('MovieController', () => {
       const createMovieDto: CreateMovieDto = {
         title: 'Test Movie',
         description: 'Test Description',
-        genre: 'action',
+        genre: genreEnum.Ação,
+        coverImage: 'http://example.com/image.jpg',
         yearRelease: 2023,
         rating: 8.5,
       };

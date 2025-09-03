@@ -3,7 +3,8 @@
 import { favoriteService } from "@/services/favoriteService";
 import { TFavorite } from "@/types/favorite";
 import { formatDate } from "@/utils/date";
-import { useRouter } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
+import { toast } from "react-toastify";
 import { Button } from "./ui/button";
 
 function Cell({
@@ -38,8 +39,14 @@ export function SimpleDataFavorite({ data }: { readonly data: readonly TFavorite
   const handleRemoveFavorite = async (id: string) => {
     try {
       const removeFavorite = await favoriteService.removeFavorite(id);
-      console.log("Favorito removido:", removeFavorite);
+      if (removeFavorite.status === 200) {
+        toast.success("Filme removido dos favoritos");
+        // TODO: Verificar se o redirect é necessário
+        return redirect("/dashboard/favorites");
+      }
+      return toast.error("Erro ao remover favorito");
     } catch (error: any) {
+      toast.error("Erro ao remover favorito");
       console.error("Erro ao remover favorito:", error);
       console.error("Response data:", error.response?.data);
       console.error("Status:", error.response?.status);
@@ -63,34 +70,34 @@ export function SimpleDataFavorite({ data }: { readonly data: readonly TFavorite
           </tr>
         </thead>
         <tbody>
-          {data.map((movie) => (
-            <tr key={movie.id}>
+          {data.map((selectedFavorite) => (
+            <tr key={selectedFavorite.id}>
               <td className="p-2 border-b border-gray-200">
-                <Cell id={movie.movie.id} value={movie.movie.title} />
+                <Cell id={selectedFavorite.movie.id} value={selectedFavorite.movie.title} />
               </td>
               <td className="p-2 border-b border-gray-200 max-w-48">
-                <Cell id={movie.movie.id} value={movie.movie.description} />
+                <Cell id={selectedFavorite.movie.id} value={selectedFavorite.movie.description} />
               </td>
               <td className="p-2 border-b border-gray-200">
-                <Cell id={movie.movie.id} value={movie.movie.genre} />
+                <Cell id={selectedFavorite.movie.id} value={selectedFavorite.movie.genre} />
               </td>
               <td className="p-2 border-b border-gray-200">
-                <Cell id={movie.movie.id} valueNumber={movie.movie.yearRelease} />
+                <Cell id={selectedFavorite.movie.id} valueNumber={selectedFavorite.movie.yearRelease} />
               </td>
               <td className="p-2 border-b border-gray-200">
-                <Cell id={movie.movie.id} valueNumber={movie.movie.rating} />
+                <Cell id={selectedFavorite.movie.id} valueNumber={selectedFavorite.movie.rating} />
               </td>
               <td className="p-2 border-b border-gray-200">
-                <Cell id={movie.movie.id} value={formatDate(movie.createdAt.toString())} />
+                <Cell id={selectedFavorite.movie.id} value={formatDate(selectedFavorite.createdAt.toString())} />
               </td>
               <td className="p-2 border-b border-gray-200">
-                <Cell id={movie.movie.id} value={formatDate(movie.updatedAt.toString())} />
+                <Cell id={selectedFavorite.movie.id} value={formatDate(selectedFavorite.updatedAt.toString())} />
               </td>
               <td className="p-2 border-b border-gray-200">
                 <Button
                   variant="destructive"
                   className="mr-4 cursor-pointer"
-                  onClick={() => handleRemoveFavorite(movie.id)}
+                  onClick={() => handleRemoveFavorite(selectedFavorite.id)}
                 >
                   Remover dos favoritos
                 </Button>

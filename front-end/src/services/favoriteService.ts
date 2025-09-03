@@ -7,8 +7,8 @@ export const favoriteService = {
   },
 
   removeFavorite: async (movieId: string) => {
-    const { data } = await apiWithAuth.delete(`/favorite/${movieId}`);
-    return data;
+    const response = await apiWithAuth.delete(`/favorite/${movieId}`);
+    return response;
   },
   getFavorites: async () => {
     const { data } = await apiWithAuth.get("/favorite");

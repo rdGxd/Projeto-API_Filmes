@@ -51,7 +51,6 @@ describe('FavoriteController', () => {
   describe('create', () => {
     it('should call favoriteService.create with correct parameters', async () => {
       const createFavoriteDto: CreateFavoriteDto = {
-        userId: mockPayload.sub,
         movieId: '123e4567-e89b-12d3-a456-426614174001',
       };
       const mockResponse = { id: '1', ...createFavoriteDto };

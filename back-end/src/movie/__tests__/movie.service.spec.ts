@@ -5,6 +5,7 @@ import { Repository } from 'typeorm';
 import { CreateMovieDto } from '../dto/create-movie.dto';
 import { UpdateMovieDto } from '../dto/update-movie.dto';
 import { Movie } from '../entities/movie.entity';
+import { genreEnum } from '../enums/genreEnum';
 import { MovieMapper } from '../mapper/movie-mapper';
 import { MovieService } from '../services/movie.service';
 
@@ -17,7 +18,8 @@ describe('MovieService', () => {
     id: randomUUID(),
     title: 'Test Movie',
     description: 'Test Description for the movie',
-    genre: 'action',
+    genre: genreEnum.Ação,
+    coverImage: 'http://example.com/image.jpg',
     yearRelease: 2023,
     rating: 8.5,
     createdAt: new Date(),
@@ -66,7 +68,8 @@ describe('MovieService', () => {
       const createMovieDto: CreateMovieDto = {
         title: 'Test Movie',
         description: 'Test Description for the movie',
-        genre: 'action',
+        genre: genreEnum.Ação,
+        coverImage: 'http://example.com/image.jpg',
         yearRelease: 2023,
         rating: 8.5,
       };

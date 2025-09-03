@@ -37,6 +37,7 @@ describe('FavoriteService', () => {
     description: 'Test Description',
     genre: 'action',
     yearRelease: 2023,
+    coverImage: 'http://example.com/image.jpg',
     rating: 8.5,
     createdAt: new Date(),
     updatedAt: new Date(),
@@ -117,13 +118,10 @@ describe('FavoriteService', () => {
 
   describe('create', () => {
     it('should create a favorite successfully', async () => {
-      const createFavoriteDto: CreateFavoriteDto = {
-        userId: mockUser.id,
-        movieId: mockMovie.id,
-      };
+      const createFavoriteDto: CreateFavoriteDto = { movieId: mockMovie.id };
 
       const favoriteEntity = {
-        id: randomUUID(),
+        id: randomUUID().toString(),
         user: mockUser,
         movie: mockMovie,
         createdAt: new Date(),
@@ -172,7 +170,6 @@ describe('FavoriteService', () => {
 
     it('should throw error when movie not found', async () => {
       const createFavoriteDto: CreateFavoriteDto = {
-        userId: mockUser.id,
         movieId: 'non-existent-movie-id',
       };
 
@@ -185,7 +182,6 @@ describe('FavoriteService', () => {
 
     it('should throw error when user not found', async () => {
       const createFavoriteDto: CreateFavoriteDto = {
-        userId: mockUser.id,
         movieId: mockMovie.id,
       };
 
@@ -199,7 +195,6 @@ describe('FavoriteService', () => {
 
     it('should throw error when user is not authorized', async () => {
       const createFavoriteDto: CreateFavoriteDto = {
-        userId: 'different-user-id',
         movieId: mockMovie.id,
       };
 
