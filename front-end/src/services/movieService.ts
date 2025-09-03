@@ -1,36 +1,26 @@
 import { GetMovies } from "@/types/movie";
-import Cookies from "js-cookie";
-import { api } from "./api";
+import { apiWithAuth } from "./api";
 
 export const movieService = {
   async getAll() {
-    const token = Cookies.get("accessToken");
-    const { data } = await api.get("/movie", {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
+    const { data } = await apiWithAuth.get("/movie");
 
     return data as GetMovies[];
   },
 
   async getById(id: string) {
-    const { data } = await api.get(`/movie/${id}`, {
-      headers: {
-        Authorization: `Bearer ${Cookies.get("accessToken")}`,
-      },
-    });
+    const { data } = await apiWithAuth.get(`/movie/${id}`);
 
     return data as GetMovies;
   },
 
-  async create(user: { name: string; email: string }) {
-    const { data } = await api.post("/movie", user);
+  async create(movie: GetMovies) {
+    const { data } = await apiWithAuth.post("/movie", movie);
     return data as GetMovies;
   },
 
   async update(movie: GetMovies) {
-    const { data } = await api.patch(`/movie/${movie.id}`, movie);
+    const { data } = await apiWithAuth.patch(`/movie/${movie.id}`, movie);
     return data;
   },
 };

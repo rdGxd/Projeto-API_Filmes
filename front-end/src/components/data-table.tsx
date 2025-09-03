@@ -23,6 +23,7 @@ export function OneMovie(data: Readonly<GetMovies>) {
 
     try {
       const updatedMovie = await movieService.update(data);
+      console.log(updatedMovie);
       if (updatedMovie) {
         toast.success("Filme atualizado com sucesso!");
       }
