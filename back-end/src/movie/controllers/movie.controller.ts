@@ -7,6 +7,7 @@ import {
   HttpStatus,
   Param,
   ParseUUIDPipe,
+  Patch,
   Post,
   Query,
   UseInterceptors,
@@ -14,6 +15,7 @@ import {
 import { Public } from 'src/auth/decorators/set-is-public-policy.decorator';
 import { CreateMovieDto } from '../dto/create-movie.dto';
 import { FilterMovieDto } from '../dto/filter-movie.dto';
+import { UpdateMovieDto } from '../dto/update-movie.dto';
 import { MovieService } from '../services/movie.service';
 
 @Controller('movie')
@@ -60,5 +62,14 @@ export class MovieController {
   @Public()
   async findOne(@Param('id', ParseUUIDPipe) id: string) {
     return await this.movieService.findOne(id);
+  }
+
+  @Patch(':id')
+  @HttpCode(HttpStatus.OK)
+  async update(
+    @Param('id', ParseUUIDPipe) id: string,
+    @Body() updateMovieDto: UpdateMovieDto,
+  ) {
+    return await this.movieService.update(id, updateMovieDto);
   }
 }

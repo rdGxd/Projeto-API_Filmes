@@ -1,7 +1,7 @@
 "use client";
 
 import { movieService } from "@/services/movieService";
-import { GetMovies } from "@/types/movie";
+import { CreateMovie, createMovie, genreEnum, GetMovies } from "@/types/movie";
 import { formatDate } from "@/utils/date";
 import Image from "next/image";
 import { useState } from "react";
@@ -10,11 +10,12 @@ import { StarRating } from "./starRating";
 
 export function OneMovie(data: Readonly<GetMovies>) {
   const [showEdit, setShowEdit] = useState(false);
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
-  const [rating, setRating] = useState(0);
-  const [genre, setGenre] = useState("");
-  const [yearRelease, setYearRelease] = useState(0);
+  const [title, setTitle] = useState(data.title);
+  const [description, setDescription] = useState(data.description);
+  const [genre, setGenre] = useState<genreEnum>(data.genre as genreEnum);
+  const [coverImage, setCoverImage] = useState(data.coverImage);
+  const [yearRelease, setYearRelease] = useState<number>(data.yearRelease);
+  const [rating, setRating] = useState<number>(data.rating);
   const [isLoading, setIsLoading] = useState(false);
 
   const handleSave = async () => {
@@ -22,13 +23,21 @@ export function OneMovie(data: Readonly<GetMovies>) {
     setIsLoading(true);
 
     try {
-      const updatedMovie = await movieService.update(data);
-      console.log(updatedMovie);
+      const updatedData: CreateMovie = createMovie.parse({
+        title,
+        description,
+        genre,
+        coverImage,
+        yearRelease,
+        rating,
+      });
+      const updatedMovie = await movieService.update("3a6f0c99-3ff8-4a00-ac77-7eb09f68c66f", updatedData);
       if (updatedMovie) {
         toast.success("Filme atualizado com sucesso!");
       }
-    } catch {
+    } catch (error) {
       toast.error("Erro ao atualizar filme.");
+      console.log(error);
     } finally {
       setIsLoading(false);
     }
@@ -97,6 +106,22 @@ export function OneMovie(data: Readonly<GetMovies>) {
               disabled={isLoading}
             />
           </div>
+          <div className="mb-4 ">
+            <label htmlFor="movie-image" className="block font-semibold mb-1">
+              Image
+            </label>
+            <input
+              id="movie-image"
+              type="text"
+              value={coverImage}
+              onChange={(e) => setCoverImage(e.target.value)}
+              className="w-full border rounded p-2"
+              disabled={isLoading}
+            />
+            <div className="flex justify-center p-4">
+              <Image src={coverImage || ""} alt={title} width={400} height={600} priority />
+            </div>
+          </div>
           <div className="mb-4">
             <label htmlFor="movie-rating" className="block font-semibold mb-1">
               Rating
@@ -111,17 +136,23 @@ export function OneMovie(data: Readonly<GetMovies>) {
             />
           </div>
           <div className="mb-4">
-            <label htmlFor="movie-genre" className="block font-semibold mb-1">
-              Gênero
-            </label>
-            <input
-              id="movie-genre"
-              type="text"
-              value={genre}
-              onChange={(e) => setGenre(e.target.value)}
-              className="w-full border rounded p-2"
-              disabled={isLoading}
-            />
+            <div className="grid gap-3">
+              <label htmlFor="genre-movie" className="block font-semibold mb-1">
+                Gênero
+              </label>
+              <select
+                id="genre-movie"
+                disabled={isLoading}
+                value={genre}
+                onChange={(e) => setGenre(e.target.value as genreEnum)}
+              >
+                {Object.values(genreEnum).map((value: string) => (
+                  <option key={value} value={value} className="bg-blue-100">
+                    {value}
+                  </option>
+                ))}
+              </select>
+            </div>
           </div>
           <div className="mb-4">
             <label htmlFor="movie-yearRelease" className="block font-semibold mb-1">

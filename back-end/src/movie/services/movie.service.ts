@@ -38,10 +38,13 @@ export class MovieService {
 
   async update(id: string, updateMovieDto: UpdateMovieDto) {
     const movie = await this.movieRepository.findOneBy({ id });
+
     if (!movie) throw new NotFoundException('Movie not found');
     this.movieRepository.merge(movie, {
       title: updateMovieDto.title,
       genre: updateMovieDto.genre,
+      description: updateMovieDto.description,
+      coverImage: updateMovieDto.coverImage,
       rating: updateMovieDto.rating,
       yearRelease: updateMovieDto.yearRelease,
       reviews: updateMovieDto.reviews,

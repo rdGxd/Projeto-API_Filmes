@@ -1,4 +1,4 @@
-import { GetMovies } from "@/types/movie";
+import { CreateMovie, GetMovies } from "@/types/movie";
 import { apiWithAuth } from "./api";
 
 export const movieService = {
@@ -19,8 +19,8 @@ export const movieService = {
     return data as GetMovies;
   },
 
-  async update(movie: GetMovies) {
-    const { data } = await apiWithAuth.patch(`/movie/${movie.id}`, movie);
+  async update(id: string, movie: CreateMovie) {
+    const { data } = await apiWithAuth.patch(`/movie/${id}`, movie);
     return data;
   },
 };
