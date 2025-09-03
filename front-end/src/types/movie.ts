@@ -1,11 +1,33 @@
 import z from "zod";
 
-const createMovie = z.object({
+export enum genreEnum {
+  Ação = "Ação",
+  Comédia = "Comédia",
+  Drama = "Drama",
+  Ficção_Científica = "Ficção Científica",
+  Terror = "Terror",
+  Romance = "Romance",
+  Animação = "Animação",
+}
+
+export const createMovie = z.object({
   title: z.string().min(2).max(100),
   description: z.string().min(10).max(1000),
+  genre: z.enum([
+    genreEnum.Ação,
+    genreEnum.Comédia,
+    genreEnum.Drama,
+    genreEnum.Ficção_Científica,
+    genreEnum.Terror,
+    genreEnum.Romance,
+    genreEnum.Animação,
+  ]),
+  coverImage: z.url(),
+  yearRelease: z.number().min(1888).max(new Date().getFullYear()),
+  rating: z.number().min(0).max(10),
 });
 
-const getMovies = z.object({
+export const getMovies = z.object({
   id: z.uuid(),
   title: z.string().min(2).max(100),
   description: z.string().min(10).max(1000),

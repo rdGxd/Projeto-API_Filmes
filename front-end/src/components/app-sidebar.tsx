@@ -1,14 +1,12 @@
 "use client";
 
-import { IconChartBar, IconDashboard, IconInnerShadowTop, IconSearch, IconSettings } from "@tabler/icons-react";
+import { IconChartBar, IconDashboard, IconDeviceTv, IconLogout, IconSearch, IconSettings } from "@tabler/icons-react";
 import * as React from "react";
 
 import { NavMain } from "@/components/nav-main";
-import { NavUser } from "@/components/nav-user";
 import {
   Sidebar,
   SidebarContent,
-  SidebarFooter,
   SidebarHeader,
   SidebarMenu,
   SidebarMenuButton,
@@ -16,12 +14,14 @@ import {
 } from "@/components/ui/sidebar";
 import Link from "next/link";
 
+const user = {
+  name: "shadcn",
+  email: "m@example.com",
+  avatar: "/avatars/shadcn.jpg",
+};
+
 const data = {
-  user: {
-    name: "shadcn",
-    email: "m@example.com",
-    avatar: "/avatars/shadcn.jpg",
-  },
+  user,
   navMain: [
     {
       title: "Dashboard",
@@ -43,6 +43,11 @@ const data = {
       url: "#",
       icon: IconSearch,
     },
+    {
+      title: "Logout",
+      url: "/logout",
+      icon: IconLogout,
+    },
   ],
 };
 
@@ -53,9 +58,9 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton asChild className="data-[slot=sidebar-menu-button]:!p-1.5">
-              <Link href="#">
-                <IconInnerShadowTop className="!size-5" />
-                <span className="text-base font-semibold">Acme Inc.</span>
+              <Link href="/dashboard">
+                <IconDeviceTv className="!size-5" />
+                <span className="text-base font-semibold">API Movies</span>
               </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>
@@ -64,9 +69,6 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       <SidebarContent>
         <NavMain items={data.navMain} />
       </SidebarContent>
-      <SidebarFooter>
-        <NavUser user={data.user} />
-      </SidebarFooter>
     </Sidebar>
   );
 }

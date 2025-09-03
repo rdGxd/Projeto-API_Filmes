@@ -24,15 +24,12 @@ export class MovieController {
   @Post()
   @HttpCode(HttpStatus.CREATED)
   async create(@Body() createMovieDto: CreateMovieDto) {
-    // Os dados já chegam validados e sanitizados aqui!
-    console.log('Dados recebidos:', {
-      title: createMovieDto.title, // String sanitizada
-      genre: createMovieDto.genre, // Lowercase normalizado
-      rating: createMovieDto.rating, // Number com 1 casa decimal
-      year: createMovieDto.yearRelease, // String validada como ano
-    });
-
-    return await this.movieService.create(createMovieDto);
+    try {
+      return await this.movieService.create(createMovieDto);
+    } catch (error) {
+      console.error('Erro ao criar filme:', error);
+      throw error;
+    }
   }
 
   @Get()

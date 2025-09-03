@@ -10,9 +10,9 @@ import {
 @ValidatorConstraint({ name: 'isValidYear', async: false })
 export class IsValidYearConstraint implements ValidatorConstraintInterface {
   validate(value: any): boolean {
-    if (typeof value !== 'string') return false;
+    if (typeof value !== 'number') return false;
 
-    const year = parseInt(value);
+    const year = value;
     const currentYear = new Date().getFullYear();
 
     return !isNaN(year) && year >= 1800 && year <= currentYear + 10;

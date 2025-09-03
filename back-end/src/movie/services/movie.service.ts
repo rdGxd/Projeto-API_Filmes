@@ -5,6 +5,7 @@ import { CreateMovieDto } from '../dto/create-movie.dto';
 import { FilterMovieDto } from '../dto/filter-movie.dto';
 import { UpdateMovieDto } from '../dto/update-movie.dto';
 import { Movie } from '../entities/movie.entity';
+import { genreEnum } from '../enums/genreEnum';
 import { MovieMapper } from '../mapper/movie-mapper';
 
 @Injectable()
@@ -56,7 +57,7 @@ export class MovieService {
     return this.movieMapper.toResponse(movie);
   }
 
-  async filterGenre(genre: string) {
+  async filterGenre(genre: genreEnum) {
     const movies = await this.movieRepository.find({ where: { genre } });
     return movies.map((movie) => this.movieMapper.toResponse(movie));
   }

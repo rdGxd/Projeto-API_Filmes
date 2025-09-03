@@ -7,6 +7,7 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { genreEnum } from '../enums/genreEnum';
 
 @Entity()
 export class Movie {
@@ -16,13 +17,13 @@ export class Movie {
   title: string;
   @Column()
   description: string;
-  @Column({ default: 'https://picsum.photos/200/300' })
-  coverImage: string;
   @Column()
-  genre: string;
+  coverImage: string;
+  @Column({ type: 'enum', enum: genreEnum })
+  genre: genreEnum;
   @Column({ type: 'int' })
   yearRelease: number;
-  @Column({ type: 'int' })
+  @Column({ type: 'decimal', precision: 3, scale: 1 })
   rating: number;
   @CreateDateColumn()
   createdAt: Date;

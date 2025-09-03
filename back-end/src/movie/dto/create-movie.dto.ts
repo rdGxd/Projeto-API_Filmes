@@ -1,13 +1,16 @@
 import { Transform } from 'class-transformer';
 import {
+  IsEnum,
   IsNotEmpty,
   IsNumber,
   IsString,
+  IsUrl,
   Length,
   Max,
   Min,
 } from 'class-validator';
 import { IsValidYear } from 'src/common/validators/movie.validators';
+import { genreEnum } from '../enums/genreEnum';
 
 export class CreateMovieDto {
   @IsString({ message: 'Title must be a string' })
@@ -24,11 +27,14 @@ export class CreateMovieDto {
   @Transform(({ value }) => value?.toString().trim())
   description: string;
 
-  @IsString({ message: 'Genre must be a string' })
+  @IsEnum(genreEnum, { each: true, message: 'Invalid genre' })
   @IsNotEmpty({ message: 'Genre cannot be empty' })
-  @Length(2, 50, { message: 'Genre must be between 2 and 50 characters' })
-  @Transform(({ value }) => value?.toString().trim().toLowerCase()) // Padroniza para minúsculo
-  genre: string;
+  genre: genreEnum;
+
+  @IsNotEmpty({ message: 'Cover image URL cannot be empty' })
+  @IsString({ message: 'Cover image URL must be a string' })
+  @IsUrl({}, { message: 'Cover image must be a valid URL' })
+  coverImage: string;
 
   @IsNumber({}, { message: 'Year must be a number' })
   @Min(1800, { message: 'Year must be at least 1800' })
@@ -43,8 +49,7 @@ export class CreateMovieDto {
   @Max(10, { message: 'Rating must be at most 10' })
   @Transform(({ value }) => {
     // Converte string para número e arredonda para 1 casa decimal
-    const num = Number(value);
-    return Math.round(num * 10) / 10;
+    return Number(value);
   })
   rating: number;
 }
