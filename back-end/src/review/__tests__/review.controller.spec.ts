@@ -51,7 +51,6 @@ describe('ReviewController', () => {
   describe('create', () => {
     it('should call reviewService.create with correct parameters', async () => {
       const createReviewDto: CreateReviewDto = {
-        userId: mockPayload.sub,
         movieId: '123e4567-e89b-12d3-a456-426614174001',
         rating: 8,
         comment: 'Great movie!',

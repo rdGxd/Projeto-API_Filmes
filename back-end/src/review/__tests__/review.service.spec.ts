@@ -121,7 +121,6 @@ describe('ReviewService', () => {
   describe('create', () => {
     it('should create a review successfully', async () => {
       const createReviewDto: CreateReviewDto = {
-        userId: mockUser.id,
         movieId: mockMovie.id,
         rating: 9,
         comment: 'Great movie!',
@@ -190,7 +189,6 @@ describe('ReviewService', () => {
 
     it('should throw error when user not found', async () => {
       const createReviewDto: CreateReviewDto = {
-        userId: mockUser.id,
         movieId: mockMovie.id,
         rating: 9,
         comment: 'Great movie!',
@@ -205,7 +203,6 @@ describe('ReviewService', () => {
 
     it('should throw error when user ID mismatch', async () => {
       const createReviewDto: CreateReviewDto = {
-        userId: 'different-user-id',
         movieId: mockMovie.id,
         rating: 9,
         comment: 'Great movie!',
@@ -220,7 +217,6 @@ describe('ReviewService', () => {
 
     it('should throw error when movie not found', async () => {
       const createReviewDto: CreateReviewDto = {
-        userId: mockUser.id,
         movieId: 'non-existent-movie-id',
         rating: 9,
         comment: 'Great movie!',

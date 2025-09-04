@@ -48,6 +48,8 @@ export class AuthService {
     return {
       accessToken,
       refreshToken,
+      expiresIn: this.jwtConfiguration.signOptions.expiresIn,
+      refreshExpiresIn: this.jwtConfiguration.refreshToken,
     };
   }
 
@@ -55,7 +57,11 @@ export class AuthService {
     try {
       const { sub } = await this.jwtService.verifyAsync(
         refreshTokenDto.refreshToken,
-        this.jwtConfiguration,
+        {
+          secret: this.jwtConfiguration.secret,
+          audience: this.jwtConfiguration.signOptions.audience,
+          issuer: this.jwtConfiguration.signOptions.issuer,
+        },
       );
 
       const user = await this.userService.findById(sub);

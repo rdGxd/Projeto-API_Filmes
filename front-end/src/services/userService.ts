@@ -1,18 +1,42 @@
-import { api } from "./api";
+import Cookies from "js-cookie";
+import { redirect } from "next/navigation";
+import { api, apiWithAuth } from "./api";
 
 export const userService = {
+  async login(credentials: { email: string; password: string }) {
+    const response = await api.post("/auth/login", credentials);
+
+    const { accessToken, refreshToken } = response.data;
+
+    // Salva tokens em cookies com expiração
+    Cookies.set("accessToken", accessToken, { expires: 1 / 24 }); // 1h
+    Cookies.set("refreshToken", refreshToken, { expires: 1 }); // 24h
+
+    if (!response.data) {
+      return false;
+    }
+
+    return true; // se quiser retornar info do usuário
+  },
+
+  async logout() {
+    Cookies.remove("accessToken");
+    Cookies.remove("refreshToken");
+    redirect("/");
+  },
+
   async getAll() {
-    const response = await api.get("/users");
+    const response = await apiWithAuth.get("/users");
     return response.data;
   },
 
   async getById(id: number) {
-    const response = await api.get(`/users/${id}`);
+    const response = await apiWithAuth.get(`/users/${id}`);
     return response.data;
   },
 
   async create(user: { name: string; email: string }) {
-    const response = await api.post("/users", user);
+    const response = await apiWithAuth.post("/users", user);
     return response.data;
   },
 };

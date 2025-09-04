@@ -1,8 +1,4 @@
-import {
-  Injectable,
-  NotFoundException,
-  UnauthorizedException,
-} from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { PayloadDto } from 'src/auth/dto/payload.dto';
 import { MovieService } from 'src/movie/services/movie.service';
@@ -28,16 +24,13 @@ export class ReviewService {
     if (!user) {
       throw new NotFoundException('User not found');
     }
-    if (createReviewDto.userId !== payload.sub) {
-      throw new UnauthorizedException('User ID mismatch');
-    }
 
     const movie = await this.movieService.findById(createReviewDto.movieId);
     if (!movie) {
       throw new NotFoundException('Movie not found');
     }
 
-    const review = this.reviewMapper.toEntity(createReviewDto);
+    const review = this.reviewMapper.toEntity(createReviewDto, user.id);
     user.reviews = [...(user.reviews || []), review];
     await this.userService.update(user.id, user, payload);
     movie.reviews = [...(movie.reviews || []), review];

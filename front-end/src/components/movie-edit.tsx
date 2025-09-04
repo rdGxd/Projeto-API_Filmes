@@ -1,6 +1,7 @@
 "use client";
 
 import { movieService } from "@/services/movieService";
+import { ReviewService } from "@/services/reviewService";
 import { CreateMovie, createMovie, genreEnum, GetMovies } from "@/types/movie";
 import { formatDate } from "@/utils/date";
 import { IconArrowLeft, IconArrowRight } from "@tabler/icons-react";
@@ -9,6 +10,7 @@ import { useRouter } from "next/navigation";
 import { Dispatch, SetStateAction, useState } from "react";
 import { toast } from "react-toastify";
 import { StarRating } from "./starRating";
+import { Button } from "./ui/button";
 
 type TMovieEdit = {
   readonly data: GetMovies;
@@ -17,11 +19,15 @@ type TMovieEdit = {
 
 export function MovieEdit({ data, setMovie }: TMovieEdit) {
   const [showEdit, setShowEdit] = useState(false);
+  const [showAddReview, setShowAddReview] = useState(false);
   const [title, setTitle] = useState<GetMovies["title"]>(data.title);
   const [description, setDescription] = useState<GetMovies["description"]>(data.description);
   const [genre, setGenre] = useState<GetMovies["genre"]>(data.genre);
   const [coverImage, setCoverImage] = useState<GetMovies["coverImage"]>(data.coverImage);
-  const [yearRelease, setYearRelease] = useState<GetMovies["yearRelease"]>(Number(data.yearRelease));
+  const [yearRelease, setYearRelease] = useState<GetMovies["yearRelease"]>(
+    Number(data.yearRelease),
+  );
+  const [comment, setComment] = useState<string>("");
   const [rating, setRating] = useState<GetMovies["rating"]>(Number(data.rating));
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
@@ -52,17 +58,40 @@ export function MovieEdit({ data, setMovie }: TMovieEdit) {
     }
   };
 
+  const handleAddReview = async () => {
+    try {
+      const newReview = {
+        movieId: data.id,
+        comment,
+        rating,
+      };
+      const updatedMovie = await ReviewService.create({ ...newReview });
+      if (updatedMovie) {
+        toast.success("Review adicionado com sucesso!");
+        setMovie(updatedMovie);
+      }
+    } catch {
+      toast.error("Erro ao adicionar review.");
+    }
+  };
+
   return (
     <div className="max-w-3xl mx-auto mt-8 p-6  shadow-lg rounded-lg">
-      <div className="p-2 flex justify-between">
-        <IconArrowLeft onClick={() => router.back()} className="cursor-pointer" />
-        <IconArrowRight onClick={() => router.forward()} className="cursor-pointer" />
-      </div>
-      {!showEdit && (
+      {!showEdit && !showAddReview && (
         <>
+          <div className="p-2 flex justify-between">
+            <IconArrowLeft onClick={() => router.back()} className="cursor-pointer" />
+            <IconArrowRight onClick={() => router.forward()} className="cursor-pointer" />
+          </div>
           <h1 className="text-3xl font-bold mb-4 text-center">{data.title}</h1>
           <div className="flex justify-center p-4">
-            <Image src={data.coverImage as string} alt={data.title} width={400} height={600} priority />
+            <Image
+              src={data.coverImage as string}
+              alt={data.title}
+              width={400}
+              height={600}
+              priority
+            />
           </div>
           <p className="mb-4">{data.description}</p>
 
@@ -76,18 +105,27 @@ export function MovieEdit({ data, setMovie }: TMovieEdit) {
             <strong>Avaliação:</strong> <StarRating rating={data.rating} />
           </div>
           <div className="mb-2">
-            <strong>Reviews:</strong> {data.reviews?.length ? data.reviews.join(", ") : "Nenhuma review disponível"}
+            <strong>Reviews:</strong>{" "}
+            {data.reviews?.length ? data.reviews.length : "Nenhuma review disponível"}
           </div>
           <div className="text-sm text-gray-500 mb-4">
             <p>Criado em: {formatDate(data.createdAt)}</p>
             <p>Atualizado em: {formatDate(data.updatedAt)}</p>
           </div>
-          <button
-            onClick={() => setShowEdit(true)}
-            className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
-          >
-            Editar
-          </button>
+          <div className="flex justify-around">
+            <Button
+              onClick={() => setShowAddReview(true)}
+              className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 cursor-pointer"
+            >
+              Adicionar comentário
+            </Button>
+            <Button
+              onClick={() => setShowEdit(true)}
+              className="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600 cursor-pointer"
+            >
+              Editar
+            </Button>
+          </div>
         </>
       )}
       {showEdit && (
@@ -189,6 +227,57 @@ export function MovieEdit({ data, setMovie }: TMovieEdit) {
             </button>
             <button
               onClick={() => setShowEdit(false)}
+              className="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400"
+              disabled={isLoading}
+            >
+              Cancelar
+            </button>
+          </div>
+        </div>
+      )}
+      {showAddReview && (
+        <div className="text-center ">
+          <h2 className="text-2xl font-bold mb-4">Adicionar comentário</h2>
+          <div className="mb-4">
+            <label htmlFor="movie-rating" className="block font-semibold mb-1">
+              Nota
+            </label>
+            <input
+              id="movie-rating"
+              min={1}
+              max={10}
+              type="number"
+              value={rating}
+              onChange={(e) => setRating(Number(e.target.value))}
+              className="w-full border rounded p-2"
+              disabled={isLoading}
+            />
+
+            <label htmlFor="movie-comment" className="block font-semibold mb-1">
+              Comentário
+            </label>
+            <textarea
+              id="movie-comment"
+              name="movie-comment"
+              rows={10}
+              cols={20}
+              value={comment}
+              onChange={(e) => setComment(e.target.value)}
+              className="border rounded p-2 w-full"
+              disabled={isLoading}
+            />
+          </div>
+
+          <div className="flex gap-2">
+            <button
+              onClick={handleAddReview}
+              className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+              disabled={isLoading}
+            >
+              Salvar
+            </button>
+            <button
+              onClick={() => setShowAddReview(false)}
               className="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400"
               disabled={isLoading}
             >

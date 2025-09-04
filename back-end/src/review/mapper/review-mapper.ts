@@ -4,7 +4,7 @@ import { Movie } from 'src/movie/entities/movie.entity';
 import { User } from 'src/user/entities/user.entity';
 import { CreateReviewDto } from '../dto/create-review.dto';
 import { ResponseReviewDto } from '../dto/response-review.dto';
-import { Review } from '../entities/review.entity'
+import { Review } from '../entities/review.entity';
 
 @Injectable()
 export class ReviewMapper {
@@ -35,7 +35,7 @@ export class ReviewMapper {
     });
   }
 
-  toEntity(dto: CreateReviewDto): Review {
+  toEntity(dto: CreateReviewDto, userId: string): Review {
     return plainToInstance(Review, {
       rating: dto.rating,
       comment: dto.comment,
@@ -43,7 +43,7 @@ export class ReviewMapper {
         id: dto.movieId,
       },
       user: {
-        id: dto.userId,
+        id: userId,
       },
     });
   }

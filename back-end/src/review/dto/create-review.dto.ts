@@ -28,10 +28,5 @@ export class CreateReviewDto {
   @IsString()
   @IsNotEmpty()
   @Transform(({ value }) => value?.toString().trim())
-  userId: string;
-
-  @IsString()
-  @IsNotEmpty()
-  @Transform(({ value }) => value?.toString().trim())
   movieId: string;
 }

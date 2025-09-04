@@ -16,6 +16,7 @@ export const MainConfig = async (app: INestApplication) => {
       'http://localhost:3001',
       'https://localhost:3001',
     ],
+    credentials: true, // permite cookies
   });
 
   // NOTE: Ativar apenas em produção

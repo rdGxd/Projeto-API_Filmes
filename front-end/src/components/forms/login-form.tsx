@@ -5,9 +5,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
-import { api } from "@/services/api";
+import { userService } from "@/services/userService";
 import { loginUser, LoginUser } from "@/types/loginForm";
-import Cookies from "js-cookie";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { FormEvent, useState } from "react";
@@ -27,10 +26,9 @@ export function LoginForm({ className, ...props }: React.ComponentProps<"div">) 
 
     try {
       const loginData: LoginUser = loginUser.parse({ email, password });
-      const { data } = await api.post("auth/login", loginData);
+      const data = await userService.login(loginData);
 
       if (data) {
-        Cookies.set("accessToken", data.accessToken);
         toast.success("Login successful!");
         route.push("/dashboard");
       } else {
@@ -77,7 +75,10 @@ export function LoginForm({ className, ...props }: React.ComponentProps<"div">) 
               <div className="grid gap-3">
                 <div className="flex items-center">
                   <Label htmlFor="passwordLogin">Password</Label>
-                  <Link href="#" className="ml-auto inline-block text-sm underline-offset-4 hover:underline">
+                  <Link
+                    href="#"
+                    className="ml-auto inline-block text-sm underline-offset-4 hover:underline"
+                  >
                     Forgot your password?
                   </Link>
                 </div>

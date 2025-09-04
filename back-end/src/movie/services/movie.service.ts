@@ -23,14 +23,16 @@ export class MovieService {
   }
 
   async findAll() {
-    const movies = await this.movieRepository.find();
+    const movies = await this.movieRepository.find({
+      relations: ['reviews', 'reviews.user'],
+    });
     return movies.map((movie) => this.movieMapper.toResponse(movie));
   }
 
   async findOne(id: string) {
     const movie = await this.movieRepository.findOne({
       where: { id },
-      relations: ['reviews'],
+      relations: ['reviews', 'reviews.user'],
     });
     if (!movie) throw new NotFoundException('Movie not found');
     return this.movieMapper.toResponse(movie);
@@ -61,19 +63,26 @@ export class MovieService {
   }
 
   async filterGenre(genre: genreEnum) {
-    const movies = await this.movieRepository.find({ where: { genre } });
+    const movies = await this.movieRepository.find({
+      where: { genre },
+      relations: ['reviews', 'reviews.user'],
+    });
     return movies.map((movie) => this.movieMapper.toResponse(movie));
   }
 
   async filterYear(year: number) {
     const movies = await this.movieRepository.find({
       where: { yearRelease: year },
+      relations: ['reviews', 'reviews.user'],
     });
     return movies.map((movie) => this.movieMapper.toResponse(movie));
   }
 
   async filterRating(rating: number) {
-    const movies = await this.movieRepository.find({ where: { rating } });
+    const movies = await this.movieRepository.find({
+      where: { rating },
+      relations: ['reviews', 'reviews.user'],
+    });
     return movies.map((movie) => this.movieMapper.toResponse(movie));
   }
 
@@ -84,7 +93,10 @@ export class MovieService {
   }
 
   async filterMovies(filterDto: FilterMovieDto) {
-    const query = this.movieRepository.createQueryBuilder('movie');
+    const query = this.movieRepository
+      .createQueryBuilder('movie')
+      .leftJoinAndSelect('movie.reviews', 'review')
+      .leftJoinAndSelect('review.user', 'user');
 
     if (filterDto.genre) {
       query.andWhere('movie.genre = :genre', { genre: filterDto.genre });

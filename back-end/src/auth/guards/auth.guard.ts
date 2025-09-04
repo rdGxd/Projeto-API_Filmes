@@ -30,10 +30,11 @@ export class AuthGuard implements CanActivate {
     }
 
     try {
-      const payload = await this.jwtService.verify(
-        token,
-        this.jwtConfiguration,
-      );
+      const payload = await this.jwtService.verify(token, {
+        secret: this.jwtConfiguration.secret,
+        audience: this.jwtConfiguration.signOptions.audience,
+        issuer: this.jwtConfiguration.signOptions.issuer,
+      });
 
       const user = await this.userService.findById(payload.sub);
 
@@ -43,7 +44,10 @@ export class AuthGuard implements CanActivate {
 
       payload['roles'] = user.roles;
       request[REQUEST_TOKEN_PAYLOAD_KEY] = payload;
-    } catch {
+    } catch (error) {
+      if (error.name === 'TokenExpiredError') {
+        throw new UnauthorizedException('Token expired');
+      }
       throw new UnauthorizedException('Invalid token');
     }
     return true;

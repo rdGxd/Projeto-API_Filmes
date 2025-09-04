@@ -13,9 +13,10 @@ export const apiWithAuth = axios.create({
   headers: {
     "Content-Type": "application/json",
   },
+  withCredentials: true, // envia cookies automaticamente se forem HttpOnly
 });
 
-// Interceptor para adicionar o token dinamicamente
+// Interceptor para adicionar token
 apiWithAuth.interceptors.request.use(
   (config) => {
     const token = Cookies.get("accessToken");
@@ -24,24 +25,42 @@ apiWithAuth.interceptors.request.use(
     }
     return config;
   },
-  (error) => {
-    return Promise.reject(error instanceof Error ? error : new Error(String(error)));
-  },
+  (error) => Promise.reject(error instanceof Error ? error : new Error(error)),
 );
 
-// Interceptor para resposta - lidar com tokens expirados
+// Interceptor para resposta e refresh
 apiWithAuth.interceptors.response.use(
   (response) => response,
-  (error) => {
-    if (error.response?.status === 401) {
-      // Token expirado ou inválido, remover cookies e redirecionar
-      Cookies.remove("accessToken");
-      Cookies.remove("refreshToken");
-      // Opcional: redirecionar para login
-      if (typeof window !== "undefined") {
-        window.location.href = "/";
+  async (error) => {
+    const originalRequest = error.config;
+
+    // Evita loop infinito
+    if (error.response?.status === 401 && !originalRequest._retry) {
+      originalRequest._retry = true;
+
+      const refreshToken = Cookies.get("refreshToken");
+      if (refreshToken) {
+        try {
+          // Chama endpoint de refresh
+          const res = await api.post("/auth/refresh", { refreshToken });
+          const newAccessToken = res.data.accessToken;
+
+          // Atualiza cookies
+          Cookies.set("accessToken", newAccessToken, { expires: 1 / 24 }); // 1h
+          Cookies.set("refreshToken", res.data.refreshToken, { expires: 1 }); // 24h
+
+          // Reenvia requisição original
+          originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
+          return apiWithAuth(originalRequest);
+        } catch {
+          // Refresh falhou, remove tokens e redireciona
+          Cookies.remove("accessToken");
+          Cookies.remove("refreshToken");
+          window.location.href = "/login";
+        }
       }
     }
-    return Promise.reject(error instanceof Error ? error : new Error(String(error)));
+
+    return Promise.reject(error instanceof Error ? error : new Error(error));
   },
 );

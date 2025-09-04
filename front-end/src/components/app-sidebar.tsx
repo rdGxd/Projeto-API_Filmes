@@ -1,6 +1,13 @@
 "use client";
 
-import { IconChartBar, IconDashboard, IconDeviceTv, IconLogout, IconSearch, IconSettings } from "@tabler/icons-react";
+import {
+  IconChartBar,
+  IconDashboard,
+  IconDeviceTv,
+  IconLogout,
+  IconSearch,
+  IconSettings,
+} from "@tabler/icons-react";
 import * as React from "react";
 
 import { NavMain } from "@/components/nav-main";
@@ -12,7 +19,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import Cookies from "js-cookie";
+import { userService } from "@/services/userService";
 import Link from "next/link";
 
 const data = {
@@ -41,8 +48,8 @@ const data = {
       title: "Logout",
       url: "/",
       icon: IconLogout,
-      fn: () => {
-        Cookies.remove("accessToken");
+      fn: async () => {
+        await userService.logout();
       },
     },
   ],
