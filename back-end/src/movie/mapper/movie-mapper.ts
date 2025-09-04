@@ -13,15 +13,6 @@ export class MovieMapper {
   }
 
   toResponse(movie: Movie): ResponseMovieDto {
-    console.log('Movie reviews:', movie.reviews?.length || 0);
-    console.log(
-      'Reviews details:',
-      movie.reviews?.map((r) => ({
-        id: r.id,
-        comment: r.comment.substring(0, 20),
-      })),
-    );
-
     const reviews: ResponseReviewDto[] = [];
 
     if (movie.reviews && movie.reviews.length > 0) {
@@ -37,7 +28,7 @@ export class MovieMapper {
     response.description = movie.description;
     response.yearRelease = movie.yearRelease;
     response.genre = movie.genre;
-    response.rating = movie.rating;
+    response.rating = movie.calcRating();
     response.createdAt = movie.createdAt;
     response.updatedAt = movie.updatedAt;
     response.coverImage = movie.coverImage;

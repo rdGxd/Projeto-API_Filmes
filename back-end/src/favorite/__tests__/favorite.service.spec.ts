@@ -1,6 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { randomUUID } from 'crypto';
+import { Movie } from 'src/movie/entities/movie.entity';
 import { Repository } from 'typeorm';
 import { PayloadDto } from '../../auth/dto/payload.dto';
 import { Roles } from '../../common/enums/role.enum';
@@ -31,7 +32,7 @@ describe('FavoriteService', () => {
     reviews: [],
   };
 
-  const mockMovie = {
+  const mockMovie = Object.assign(Object.create(Movie.prototype), {
     id: randomUUID(),
     title: 'Test Movie',
     description: 'Test Description',
@@ -42,12 +43,12 @@ describe('FavoriteService', () => {
     createdAt: new Date(),
     updatedAt: new Date(),
     reviews: [],
-  };
+  });
 
   const mockFavorite: Favorite = {
     id: randomUUID(),
     user: mockUser as any,
-    movie: mockMovie as any,
+    movie: mockMovie as Movie,
     createdAt: new Date(),
     updatedAt: new Date(),
   };
@@ -142,7 +143,7 @@ describe('FavoriteService', () => {
         updatedAt: favoriteEntity.updatedAt,
       };
 
-      jest.spyOn(movieService, 'findById').mockResolvedValue(mockMovie as any);
+      jest.spyOn(movieService, 'findById').mockResolvedValue(mockMovie as Movie);
       jest.spyOn(userService, 'findById').mockResolvedValue(mockUser as any);
       jest.spyOn(favoriteMapper, 'toEntity').mockReturnValue(favoriteEntity);
       jest.spyOn(favoriteRepository, 'save').mockResolvedValue(favoriteEntity);
@@ -185,7 +186,7 @@ describe('FavoriteService', () => {
         movieId: mockMovie.id,
       };
 
-      jest.spyOn(movieService, 'findById').mockResolvedValue(mockMovie as any);
+      jest.spyOn(movieService, 'findById').mockResolvedValue(mockMovie );
       jest.spyOn(userService, 'findById').mockResolvedValue(null);
 
       await expect(
@@ -198,7 +199,7 @@ describe('FavoriteService', () => {
         movieId: mockMovie.id,
       };
 
-      jest.spyOn(movieService, 'findById').mockResolvedValue(mockMovie as any);
+      jest.spyOn(movieService, 'findById').mockResolvedValue(mockMovie );
       jest.spyOn(userService, 'findById').mockResolvedValue(mockUser as any);
 
       await expect(

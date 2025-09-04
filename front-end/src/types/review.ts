@@ -4,7 +4,7 @@ import { getMovies } from "./movie";
 export const getReviews = z.object({
   id: z.uuid(),
 
-  rating: z.number(),
+  rating: z.number().min(1).max(10),
 
   comment: z.string(),
 

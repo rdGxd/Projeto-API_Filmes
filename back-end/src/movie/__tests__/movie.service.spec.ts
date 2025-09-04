@@ -14,7 +14,7 @@ describe('MovieService', () => {
   let movieRepository: Repository<Movie>;
   let movieMapper: MovieMapper;
 
-  const mockMovie: Movie = {
+  const mockMovie: Movie = Object.assign(Object.create(Movie.prototype), {
     id: randomUUID(),
     title: 'Test Movie',
     description: 'Test Description for the movie',
@@ -25,7 +25,7 @@ describe('MovieService', () => {
     createdAt: new Date(),
     updatedAt: new Date(),
     reviews: [],
-  };
+  });
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -42,6 +42,7 @@ describe('MovieService', () => {
             merge: jest.fn(),
           },
         },
+
         {
           provide: MovieMapper,
           useValue: {
@@ -175,7 +176,10 @@ describe('MovieService', () => {
         reviews: [],
       };
 
-      const updatedMovie = { ...mockMovie, title: 'Updated Movie Title' };
+      const updatedMovie = Object.assign(Object.create(Movie.prototype), {
+        ...mockMovie,
+        title: 'Updated Movie Title',
+      });
       const expectedResponse = {
         id: updatedMovie.id,
         title: updatedMovie.title,

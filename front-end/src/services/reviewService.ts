@@ -9,6 +9,6 @@ export const ReviewService = {
 
   async create(reviewData: CreateReview) {
     const response = await apiWithAuth.post("/review", reviewData);
-    return response.data;
+    return response;
   },
 };

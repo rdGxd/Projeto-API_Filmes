@@ -1,5 +1,6 @@
 "use client";
 
+import { StarRating } from "@/components/starRating";
 import { movieService } from "@/services/movieService";
 import { GetReviews } from "@/types/review";
 import Cookies from "js-cookie";
@@ -15,7 +16,6 @@ export default function DashboardPage() {
     const fetchData = async () => {
       const token = Cookies.get("accessToken");
       const reviews = await movieService.getReviews(id as string);
-      console.log(reviews);
       setReview(reviews);
 
       if (!token) {
@@ -27,15 +27,19 @@ export default function DashboardPage() {
 
   return (
     <div className="grid gap-4 p-4 justify-center items-center content-center">
-      <MovieDetails id={id as string} />
+      <MovieDetails id={id as string} /> 
       <div className="flex flex-col p-2 border rounded w-full max-w-3xl">
         {review &&
           review.map((rev) => (
-            <div key={rev.id}>
-              <h2 className="font-semibold">
-                Comentário de: <span className="font-bold">{rev.user.name}</span>
-              </h2>
-              <p className="text-gray-500">{rev.comment}</p>
+            <div key={rev.id} className="p-1">
+              <div className="flex justify-between items-center">
+                <h2 className="font-semibold">{rev.user.name} </h2>
+                <span className="text-gray-500">
+                  Criado em: {new Date(rev.createdAt).toLocaleDateString()}
+                </span>
+              </div>
+              <StarRating rating={rev.rating} />
+              <p className="text-gray-500  border-b mb-2">Comentário: {rev.comment}</p>
             </div>
           ))}
 

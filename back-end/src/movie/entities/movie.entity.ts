@@ -31,4 +31,12 @@ export class Movie {
   updatedAt: Date;
   @OneToMany(() => Review, (review) => review.movie)
   reviews: Review[];
+
+  calcRating() {
+    if (!this.reviews || this.reviews.length === 0) {
+      return 0;
+    }
+    const total = this.reviews.reduce((acc, review) => acc + review.rating, 0);
+    return total / this.reviews.length;
+  }
 }

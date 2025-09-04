@@ -3,6 +3,7 @@
 import { movieService } from "@/services/movieService";
 import { ReviewService } from "@/services/reviewService";
 import { CreateMovie, createMovie, genreEnum, GetMovies } from "@/types/movie";
+import { CreateReview } from "@/types/review";
 import { formatDate } from "@/utils/date";
 import { IconArrowLeft, IconArrowRight } from "@tabler/icons-react";
 import Image from "next/image";
@@ -27,7 +28,7 @@ export function MovieEdit({ data, setMovie }: TMovieEdit) {
   const [yearRelease, setYearRelease] = useState<GetMovies["yearRelease"]>(
     Number(data.yearRelease),
   );
-  const [comment, setComment] = useState<string>("");
+  const [comment, setComment] = useState<CreateReview["comment"]>("");
   const [rating, setRating] = useState<GetMovies["rating"]>(Number(data.rating));
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
@@ -66,9 +67,10 @@ export function MovieEdit({ data, setMovie }: TMovieEdit) {
         rating,
       };
       const updatedMovie = await ReviewService.create({ ...newReview });
-      if (updatedMovie) {
+      if (updatedMovie.status === 201) {
         toast.success("Review adicionado com sucesso!");
-        setMovie(updatedMovie);
+        setMovie(updatedMovie.data);
+        window.location.reload();
       }
     } catch {
       toast.error("Erro ao adicionar review.");
@@ -244,7 +246,7 @@ export function MovieEdit({ data, setMovie }: TMovieEdit) {
             </label>
             <input
               id="movie-rating"
-              min={1}
+              min={0}
               max={10}
               type="number"
               value={rating}

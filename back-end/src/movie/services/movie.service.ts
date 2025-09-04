@@ -26,6 +26,7 @@ export class MovieService {
     const movies = await this.movieRepository.find({
       relations: ['reviews', 'reviews.user'],
     });
+
     return movies.map((movie) => this.movieMapper.toResponse(movie));
   }
 
