@@ -15,6 +15,7 @@ export default function DashboardPage() {
     const fetchData = async () => {
       const token = Cookies.get("accessToken");
       const reviews = await movieService.getReviews(id as string);
+      console.log(reviews);
       setReview(reviews);
 
       if (!token) {

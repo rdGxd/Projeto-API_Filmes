@@ -34,7 +34,9 @@ export class MovieService {
       where: { id },
       relations: ['reviews', 'reviews.user'],
     });
+
     if (!movie) throw new NotFoundException('Movie not found');
+
     return this.movieMapper.toResponse(movie);
   }
 

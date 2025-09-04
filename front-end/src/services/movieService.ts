@@ -25,7 +25,7 @@ export const movieService = {
   },
 
   async getReviews(id: string) {
-    const { reviews } = await this.getById(id);
+    const {reviews} = await this.getById(id);
     return reviews as GetReviews[];
   },
 };

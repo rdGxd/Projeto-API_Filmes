@@ -20,25 +20,29 @@ export class ReviewService {
   ) {}
 
   async create(createReviewDto: CreateReviewDto, payload: PayloadDto) {
+    // Verificar se o usuário existe
     const user = await this.userService.findById(payload.sub);
     if (!user) {
       throw new NotFoundException('User not found');
     }
 
+    // Verificar se o filme existe
     const movie = await this.movieService.findById(createReviewDto.movieId);
     if (!movie) {
       throw new NotFoundException('Movie not found');
     }
 
-    const review = this.reviewMapper.toEntity(createReviewDto, user.id);
-    user.reviews = [...(user.reviews || []), review];
-    await this.userService.update(user.id, user, payload);
-    movie.reviews = [...(movie.reviews || []), review];
-    await this.movieService.update(movie.id, {
-      reviews: movie.reviews,
-    });
-    await this.reviewRepository.save(review);
-    return this.reviewMapper.toDto(review, movie, user);
+    // Criar a review
+    const review = new Review();
+    review.rating = createReviewDto.rating;
+    review.comment = createReviewDto.comment;
+    review.user = user;
+    review.movie = movie;
+
+    // Salvar a review
+    const savedReview = await this.reviewRepository.save(review);
+
+    return this.reviewMapper.toDto(savedReview, movie, user);
   }
 
   async findAll(payload: PayloadDto) {
@@ -46,7 +50,6 @@ export class ReviewService {
       where: { user: { id: payload.sub } },
       relations: ['movie', 'user'],
     });
-    console.log(reviews);
     return reviews.map((review) =>
       this.reviewMapper.toDto(review, review.movie, review.user),
     );
