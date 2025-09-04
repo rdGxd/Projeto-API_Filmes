@@ -27,8 +27,9 @@ export default function DashboardPage() {
 
   return (
     <div className="grid gap-4 p-4 justify-center items-center content-center">
-      <MovieDetails id={id as string} /> 
+      <MovieDetails id={id as string} />
       <div className="flex flex-col p-2 border rounded w-full max-w-3xl">
+        <h2 className="text-center font-bold text-2xl p-2 mb-10">Comentários sobre o filme</h2>
         {review &&
           review.map((rev) => (
             <div key={rev.id} className="p-1">

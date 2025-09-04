@@ -5,7 +5,7 @@ import { ReviewService } from "@/services/reviewService";
 import { CreateMovie, createMovie, genreEnum, GetMovies } from "@/types/movie";
 import { CreateReview } from "@/types/review";
 import { formatDate } from "@/utils/date";
-import { IconArrowLeft, IconArrowRight } from "@tabler/icons-react";
+import { IconArrowLeft, IconArrowRight, IconHome } from "@tabler/icons-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { Dispatch, SetStateAction, useState } from "react";
@@ -36,6 +36,7 @@ export function MovieEdit({ data, setMovie }: TMovieEdit) {
   const handleSave = async () => {
     setShowEdit(false);
     setIsLoading(true);
+    setShowAddReview(false);
 
     try {
       const updatedData: CreateMovie = createMovie.parse({
@@ -60,6 +61,10 @@ export function MovieEdit({ data, setMovie }: TMovieEdit) {
   };
 
   const handleAddReview = async () => {
+    setShowAddReview(false);
+    setIsLoading(true);
+    setShowEdit(false);
+
     try {
       const newReview = {
         movieId: data.id,
@@ -74,15 +79,18 @@ export function MovieEdit({ data, setMovie }: TMovieEdit) {
       }
     } catch {
       toast.error("Erro ao adicionar review.");
+    } finally {
+      setIsLoading(false);
     }
   };
 
   return (
-    <div className="max-w-3xl mx-auto mt-8 p-6  shadow-lg rounded-lg">
+    <div className="max-w-3xl mx-auto mt-8 p-6  shadow-lg rounded-lg ">
       {!showEdit && !showAddReview && (
         <>
           <div className="p-2 flex justify-between">
             <IconArrowLeft onClick={() => router.back()} className="cursor-pointer" />
+            <IconHome onClick={() => router.push("/dashboard")} className="cursor-pointer" />
             <IconArrowRight onClick={() => router.forward()} className="cursor-pointer" />
           </div>
           <h1 className="text-3xl font-bold mb-4 text-center">{data.title}</h1>
@@ -131,7 +139,7 @@ export function MovieEdit({ data, setMovie }: TMovieEdit) {
         </>
       )}
       {showEdit && (
-        <div>
+        <div className="flex flex-col text-center">
           <h2 className="text-2xl font-bold mb-4">Editar Filme</h2>
           <div className="mb-4">
             <label htmlFor="movie-title" className="block font-semibold mb-1">
@@ -219,21 +227,21 @@ export function MovieEdit({ data, setMovie }: TMovieEdit) {
               disabled={isLoading}
             />
           </div>
-          <div className="flex gap-2">
-            <button
+          <div className="flex gap-2 justify-around">
+            <Button
               onClick={handleSave}
               className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
               disabled={isLoading}
             >
               Salvar
-            </button>
-            <button
+            </Button>
+            <Button
               onClick={() => setShowEdit(false)}
               className="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400"
               disabled={isLoading}
             >
               Cancelar
-            </button>
+            </Button>
           </div>
         </div>
       )}
@@ -270,21 +278,21 @@ export function MovieEdit({ data, setMovie }: TMovieEdit) {
             />
           </div>
 
-          <div className="flex gap-2">
-            <button
+          <div className="flex gap-2 justify-around">
+            <Button
               onClick={handleAddReview}
               className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
               disabled={isLoading}
             >
               Salvar
-            </button>
-            <button
+            </Button>
+            <Button
               onClick={() => setShowAddReview(false)}
               className="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400"
               disabled={isLoading}
             >
               Cancelar
-            </button>
+            </Button>
           </div>
         </div>
       )}
