@@ -20,7 +20,9 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
 import { userService } from "@/services/userService";
+import Cookies from "js-cookie";
 import Link from "next/link";
+import { redirect } from "next/navigation";
 
 const data = {
   navMain: [
@@ -56,6 +58,15 @@ const data = {
 };
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  React.useEffect(() => {
+    const accessToken = Cookies.get("accessToken");
+    const refreshToken = Cookies.get("refreshToken");
+
+    if (!accessToken || !refreshToken) {
+      return redirect("/");
+    }
+  });
+
   return (
     <Sidebar collapsible="offcanvas" {...props}>
       <SidebarHeader>

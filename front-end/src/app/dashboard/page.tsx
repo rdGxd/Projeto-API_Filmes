@@ -1,18 +1,9 @@
 import { AppSidebar } from "@/components/app-sidebar";
 import { SiteHeader } from "@/components/site-header";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
-import { cookies } from "next/headers";
-import { redirect } from "next/navigation";
 import MoviesTable from "../../components/moviesTables/index ";
 
 export default async function Page() {
-  const cookieStore = await cookies();
-  const token = cookieStore.get("accessToken")?.value;
-
-  if (!token) {
-    return redirect("/");
-  }
-
   return (
     <SidebarProvider
       style={

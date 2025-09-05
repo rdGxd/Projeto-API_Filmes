@@ -28,4 +28,9 @@ export const movieService = {
     const {reviews} = await this.getById(id);
     return reviews as GetReviews[];
   },
+
+  async delete(id: string) {
+    const response = await apiWithAuth.delete(`/movie/${id}`);
+    return response;
+  }
 };

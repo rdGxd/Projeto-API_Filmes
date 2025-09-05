@@ -3,7 +3,7 @@
 import { favoriteService } from "@/services/favoriteService";
 import { TFavorite } from "@/types/favorite";
 import { formatDate } from "@/utils/date";
-import { redirect, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import { Button } from "./ui/button";
 
@@ -41,8 +41,7 @@ export function SimpleDataFavorite({ data }: { readonly data: readonly TFavorite
       const removeFavorite = await favoriteService.removeFavorite(id);
       if (removeFavorite.status === 200) {
         toast.success("Filme removido dos favoritos");
-        // TODO: Verificar se o redirect é necessário
-        return redirect("/dashboard/favorites");
+        window.location.reload();
       }
       return toast.error("Erro ao remover favorito");
     } catch (error: any) {
@@ -66,7 +65,7 @@ export function SimpleDataFavorite({ data }: { readonly data: readonly TFavorite
             <th className="p-2  border-b border-gray-300">Rating</th>
             <th className="p-2  border-b border-gray-300">Created At</th>
             <th className="p-2  border-b border-gray-300">Updated At</th>
-            <th className="p-2 border-b border-gray-300">Ações</th>
+            <th className="p-2  border-b border-gray-300">Ações</th>
           </tr>
         </thead>
         <tbody>
@@ -82,16 +81,25 @@ export function SimpleDataFavorite({ data }: { readonly data: readonly TFavorite
                 <Cell id={selectedFavorite.movie.id} value={selectedFavorite.movie.genre} />
               </td>
               <td className="p-2 border-b border-gray-200">
-                <Cell id={selectedFavorite.movie.id} valueNumber={selectedFavorite.movie.yearRelease} />
+                <Cell
+                  id={selectedFavorite.movie.id}
+                  valueNumber={selectedFavorite.movie.yearRelease}
+                />
               </td>
               <td className="p-2 border-b border-gray-200">
                 <Cell id={selectedFavorite.movie.id} valueNumber={selectedFavorite.movie.rating} />
               </td>
               <td className="p-2 border-b border-gray-200">
-                <Cell id={selectedFavorite.movie.id} value={formatDate(selectedFavorite.createdAt.toString())} />
+                <Cell
+                  id={selectedFavorite.movie.id}
+                  value={formatDate(selectedFavorite.createdAt.toString())}
+                />
               </td>
               <td className="p-2 border-b border-gray-200">
-                <Cell id={selectedFavorite.movie.id} value={formatDate(selectedFavorite.updatedAt.toString())} />
+                <Cell
+                  id={selectedFavorite.movie.id}
+                  value={formatDate(selectedFavorite.updatedAt.toString())}
+                />
               </td>
               <td className="p-2 border-b border-gray-200">
                 <Button

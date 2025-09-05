@@ -1,9 +1,11 @@
 "use client";
 
 import { favoriteService } from "@/services/favoriteService";
+import { movieService } from "@/services/movieService";
 import { GetMovies } from "@/types/movie";
 import { formatDate } from "@/utils/date";
 import { useRouter } from "next/navigation";
+import { Filters } from "./filter";
 import { Button } from "./ui/button";
 
 function Cell({
@@ -46,8 +48,27 @@ export function SimpleDataTable({ data }: { readonly data: readonly GetMovies[] 
     }
   };
 
+  const handleDelete = async (id: string) => {
+    try {
+      const deleteFavorite = await movieService.delete(id);
+      console.log("Favorito removido:", deleteFavorite);
+    } catch (error: any) {
+      console.error("Erro ao remover favorito:", error);
+      console.error("Response data:", error.response?.data);
+      console.error("Status:", error.response?.status);
+    }
+  };
+
+  const handleFilters = () => {
+    // Implement filter logic here
+  };
+
   return (
     <div className="w-full overflow-x-auto text-center">
+      <div className="flex justify-between items-center p-4">
+        <h1 className="text-3xl p-4 font-bold">All Movies</h1>
+        <Filters />
+      </div>
       <table className="w-full border-collapse">
         <thead>
           <tr>
@@ -58,8 +79,7 @@ export function SimpleDataTable({ data }: { readonly data: readonly GetMovies[] 
             <th className="p-2  border-b border-gray-300">Rating</th>
             <th className="p-2  border-b border-gray-300">Created At</th>
             <th className="p-2  border-b border-gray-300">Updated At</th>
-            <th className=" border-b border-gray-300"></th>
-            <th className=" border-b border-gray-300"></th>
+            <th className="p-2  border-b border-gray-300">Ações</th>
           </tr>
         </thead>
         <tbody>
@@ -87,10 +107,18 @@ export function SimpleDataTable({ data }: { readonly data: readonly GetMovies[] 
                 <Cell id={movie.id} value={formatDate(movie.updatedAt)} />
               </td>
               <td className="p-2 border-b border-gray-200">
-                <Button variant="default" className="mr-4 cursor-pointer" onClick={() => handleFavorite(movie.id)}>
+                <Button
+                  variant="default"
+                  className="mr-4 cursor-pointer"
+                  onClick={() => handleFavorite(movie.id)}
+                >
                   Favoritar
                 </Button>
-                <Button variant="destructive" className="cursor-pointer">
+                <Button
+                  variant="destructive"
+                  className="cursor-pointer"
+                  onClick={() => handleDelete(movie.id)}
+                >
                   Delete
                 </Button>
               </td>
