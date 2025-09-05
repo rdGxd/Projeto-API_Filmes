@@ -103,8 +103,9 @@ export function MovieEdit({ data, setMovie }: TMovieEdit) {
               priority
             />
           </div>
-          <p className="mb-4">{data.description}</p>
-
+          <div className="mb-2">
+            <strong>Descrição:</strong> {data.description}
+          </div>
           <div className="mb-2">
             <strong>Ano de lançamento:</strong> {data.yearRelease}
           </div>
