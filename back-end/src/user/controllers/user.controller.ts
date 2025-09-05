@@ -36,25 +36,21 @@ export class UserController {
     return await this.userService.findAll();
   }
 
-  @Get(':id')
   @HttpCode(HttpStatus.OK)
+  @Get('me')
   @SetRoutePolicy(Roles.Admin, Roles.User)
-  async findOne(
-    @Param('id') id: string,
-    @TokenPayLoadParam() tokenPayload: PayloadDto,
-  ) {
-    return await this.userService.findOne(id, tokenPayload);
+  async findOne(@TokenPayLoadParam() tokenPayload: PayloadDto) {
+    return await this.userService.findOne(tokenPayload);
   }
 
-  @Patch(':id')
   @SetRoutePolicy(Roles.Admin, Roles.User)
   @HttpCode(HttpStatus.OK)
+  @Patch('me')
   async update(
-    @Param('id') id: string,
     @Body() updateUserDto: UpdateUserDto,
     @TokenPayLoadParam() tokenPayload: PayloadDto,
   ) {
-    return await this.userService.update(id, updateUserDto, tokenPayload);
+    return await this.userService.update(updateUserDto, tokenPayload);
   }
 
   @Delete(':id')

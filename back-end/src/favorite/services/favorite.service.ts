@@ -34,7 +34,7 @@ export class FavoriteService {
     const favorite = this.favoriteMapper.toEntity(user, movie);
     user.favorites = [...(user.favorites || []), favorite];
     await this.favoriteRepository.save(favorite);
-    await this.userService.update(user.id, { ...user }, payload);
+    await this.userService.update({ ...user }, payload);
     return this.favoriteMapper.toDto(favorite);
   }
 

@@ -30,13 +30,18 @@ export const userService = {
     return response.data;
   },
 
-  async getById(id: number) {
-    const response = await apiWithAuth.get(`/users/${id}`);
+  async getById() {
+    const response = await apiWithAuth.get(`/user/me`);
     return response.data;
   },
 
   async create(user: { name: string; email: string }) {
     const response = await apiWithAuth.post("/users", user);
+    return response.data;
+  },
+
+  async update(userData: { name?: string; email?: string; password?: string }) {
+    const response = await apiWithAuth.patch("/user/me", userData);
     return response.data;
   },
 };

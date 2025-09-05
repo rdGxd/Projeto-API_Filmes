@@ -34,36 +34,25 @@ export class UserService {
     return allUsers.map((user) => this.userMapper.toResponse(user));
   }
 
-  async findOne(id: string, payload: PayloadDto) {
+  async findOne(payload: PayloadDto) {
     const user = await this.userRepository.findOne({
-      where: { id },
+      where: { id: payload.sub },
       relations: ['favorites', 'reviews'],
     });
     if (!user) {
       throw new NotFoundException('User not found');
-    }
-    if (user.id !== payload.sub) {
-      throw new UnauthorizedException('Unauthorized');
     }
     return this.userMapper.toResponse(user);
   }
 
-  async update(
-    id: string,
-    updateUserDto: UpdateUserDto,
-    tokenPayload: PayloadDto,
-  ) {
+  async update(updateUserDto: UpdateUserDto, tokenPayload: PayloadDto) {
     const user = await this.userRepository.findOne({
-      where: { id },
+      where: { id: tokenPayload.sub },
       relations: ['favorites', 'reviews'],
     });
 
     if (!user) {
       throw new NotFoundException('User not found');
-    }
-
-    if (user.id !== tokenPayload.sub) {
-      throw new UnauthorizedException('Unauthorized');
     }
 
     this.userRepository.merge(user, updateUserDto);
@@ -71,7 +60,7 @@ export class UserService {
 
     // Recarregar com relacionamentos para retornar
     const updatedUser = await this.userRepository.findOne({
-      where: { id },
+      where: { id: user.id },
       relations: ['favorites', 'reviews'],
     });
 
