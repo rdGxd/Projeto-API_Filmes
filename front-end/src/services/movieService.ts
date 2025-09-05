@@ -14,7 +14,7 @@ export const movieService = {
     return data as GetMovies;
   },
 
-  async create(movie: GetMovies) {
+  async create(movie: CreateMovie) {
     const { data } = await apiWithAuth.post("/movie", movie);
     return data as GetMovies;
   },
@@ -37,6 +37,16 @@ export const movieService = {
   async filterMovies(filter: string) {
     const response = await apiWithAuth.get(`/movie/filter/${filter}`);
     console.log("Response data:", response.data);
+    return response.data;
+  },
+
+  async filter(filters: { genre?: string; year?: number; minRating?: number }) {
+    const params = new URLSearchParams();
+    if (filters.genre) params.append("genre", filters.genre);
+    if (filters.year) params.append("year", filters.year.toString());
+    if (filters.minRating) params.append("minRating", filters.minRating.toString());
+
+    const response = await apiWithAuth.get(`/movie/search?${params.toString()}`);
     return response.data;
   },
 };

@@ -4,19 +4,24 @@ import { api, apiWithAuth } from "./api";
 
 export const userService = {
   async login(credentials: { email: string; password: string }) {
-    const response = await api.post("/auth/login", credentials);
+    try {
+      const response = await api.post("/auth/login", credentials);
 
-    const { accessToken, refreshToken } = response.data;
+      if (!response.data?.accessToken || !response.data?.refreshToken) {
+        return false;
+      }
 
-    // Salva tokens em cookies com expiração
-    Cookies.set("accessToken", accessToken, { expires: 1 / 24 }); // 1h
-    Cookies.set("refreshToken", refreshToken, { expires: 1 }); // 24h
+      const { accessToken, refreshToken } = response.data;
 
-    if (!response.data) {
+      // Salva tokens em cookies com expiração
+      Cookies.set("accessToken", accessToken, { expires: 1 / 24 }); // 1h
+      Cookies.set("refreshToken", refreshToken, { expires: 1 }); // 24h
+
+      return true; // se quiser retornar info do usuário
+    } catch (error) {
+      console.error("Login failed:", error);
       return false;
     }
-
-    return true; // se quiser retornar info do usuário
   },
 
   async logout() {

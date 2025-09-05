@@ -154,7 +154,7 @@ describe('UserService', () => {
       jest.spyOn(userRepository, 'findOne').mockResolvedValue(mockUser);
       jest.spyOn(userMapper, 'toResponse').mockReturnValue(mappedUser as any);
 
-      const result = await userService.findOne(mockUser.id, mockPayload);
+      const result = await userService.findOne(mockPayload);
 
       expect(userRepository.findOne).toHaveBeenCalledWith({
         where: { id: mockUser.id },
@@ -167,9 +167,9 @@ describe('UserService', () => {
     it('should throw error when user not found', async () => {
       jest.spyOn(userRepository, 'findOne').mockResolvedValue(null);
 
-      await expect(
-        userService.findOne('non-existent-id', mockPayload),
-      ).rejects.toThrow('User not found');
+      await expect(userService.findOne(mockPayload)).rejects.toThrow(
+        'User not found',
+      );
     });
 
     it('should throw error when user is not authorized', async () => {
@@ -185,9 +185,9 @@ describe('UserService', () => {
 
       jest.spyOn(userRepository, 'findOne').mockResolvedValue(mockUser);
 
-      await expect(
-        userService.findOne(mockUser.id, unauthorizedPayload),
-      ).rejects.toThrow('Unauthorized');
+      await expect(userService.findOne(unauthorizedPayload)).rejects.toThrow(
+        'Unauthorized',
+      );
     });
   });
 
@@ -219,11 +219,7 @@ describe('UserService', () => {
         .spyOn(userMapper, 'toResponse')
         .mockReturnValue(mappedResponse as any);
 
-      const result = await userService.update(
-        mockUser.id,
-        updateDto,
-        mockPayload,
-      );
+      const result = await userService.update(updateDto, mockPayload);
 
       expect(userRepository.findOne).toHaveBeenCalledTimes(2);
       expect(userRepository.merge).toHaveBeenCalledWith(mockUser, updateDto);
@@ -237,9 +233,9 @@ describe('UserService', () => {
 
       jest.spyOn(userRepository, 'findOne').mockResolvedValue(null);
 
-      await expect(
-        userService.update('non-existent-id', updateDto, mockPayload),
-      ).rejects.toThrow('User not found');
+      await expect(userService.update(updateDto, mockPayload)).rejects.toThrow(
+        'User not found',
+      );
     });
 
     it('should throw error when user is not authorized for update', async () => {
@@ -257,7 +253,7 @@ describe('UserService', () => {
       jest.spyOn(userRepository, 'findOne').mockResolvedValue(mockUser);
 
       await expect(
-        userService.update(mockUser.id, updateDto, unauthorizedPayload),
+        userService.update(updateDto, unauthorizedPayload),
       ).rejects.toThrow('Unauthorized');
     });
   });

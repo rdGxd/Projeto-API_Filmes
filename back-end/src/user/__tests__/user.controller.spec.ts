@@ -41,7 +41,7 @@ describe('UserController', () => {
 
     jest.spyOn(userServiceMock, 'findOne').mockReturnValue(expected);
 
-    const result = await controller.findOne('user-id', mockTokenPayloadDto);
+    const result = await controller.findOne(mockTokenPayloadDto);
     expect(result).toEqual(expected);
     expect(userServiceMock.findOne).toHaveBeenCalledWith(
       'user-id',
@@ -57,7 +57,6 @@ describe('UserController', () => {
     jest.spyOn(userServiceMock, 'update').mockReturnValue(expected);
 
     const result = await controller.update(
-      'user-id',
       argument as any,
       mockTokenPayloadDto,
     );
