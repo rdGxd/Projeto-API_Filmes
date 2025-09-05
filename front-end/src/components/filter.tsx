@@ -1,24 +1,19 @@
 import { Button } from "@/components/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { movieService } from "@/services/movieService";
+import { TFavorite } from "@/types/favorite";
+import { GetMovies } from "@/types/movie";
 import { Label } from "@radix-ui/react-label";
-import { useState } from "react";
+import { Dispatch, useState } from "react";
 
-export function Filters() {
+export function Filters({ set }: { readonly set: Dispatch<GetMovies[]> | Dispatch<TFavorite[]> }) {
   const [selectedFilters, setSelectedFilters] = useState<string>("");
 
-  const handleClick = () => {
-    switch (selectedFilters) {
-      case "genre":
-        console.log("filter by genre");
-        break;
-      case "rating":
-        console.log("filter by rating");
-        break;
-      case "release-year":
-        console.log("filter by release year");
-        break;
-    }
+  const handleClick = async () => {
+    const response = await movieService.filterMovies(selectedFilters);
+    console.log("Filtered movies:", response);
+    set(response);
   };
 
   return (
@@ -40,15 +35,11 @@ export function Filters() {
               </div>
               <div className="flex items-center space-x-2">
                 <RadioGroupItem value="rating" id="rating" className="border border-purple-500" />
-                <Label htmlFor="rating">Nota</Label>
+                <Label htmlFor="rating">Avaliação</Label>
               </div>
               <div className="flex items-center space-x-2">
-                <RadioGroupItem
-                  value="release-year"
-                  id="release-year"
-                  className="border border-purple-500"
-                />
-                <Label htmlFor="release-year">Ano de lançamento</Label>
+                <RadioGroupItem value="year" id="year" className="border border-purple-500" />
+                <Label htmlFor="year">Ano de lançamento</Label>
               </div>
               <div className="pt-4">
                 <Button variant="outline" onClick={handleClick}>

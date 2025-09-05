@@ -2,8 +2,8 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { MovieController } from '../controllers/movie.controller';
 import { CreateMovieDto } from '../dto/create-movie.dto';
 import { FilterMovieDto } from '../dto/filter-movie.dto';
-import { MovieService } from '../services/movie.service';
 import { genreEnum } from '../enums/genreEnum';
+import { MovieService } from '../services/movie.service';
 
 describe('MovieController', () => {
   let controller: MovieController;
@@ -58,7 +58,10 @@ describe('MovieController', () => {
 
   describe('search', () => {
     it('should call movieService.filterMovies with correct parameters', async () => {
-      const filterDto: FilterMovieDto = { genre: 'action', year: '2023' };
+      const filterDto: FilterMovieDto = {
+        genre: 'action',
+        year: '2023',
+      };
       const mockResponse = [{ id: '1', title: 'Test Movie' }];
 
       movieService.filterMovies.mockResolvedValue(mockResponse);

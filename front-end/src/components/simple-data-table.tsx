@@ -5,6 +5,7 @@ import { movieService } from "@/services/movieService";
 import { GetMovies } from "@/types/movie";
 import { formatDate } from "@/utils/date";
 import { useRouter } from "next/navigation";
+import { Dispatch } from "react";
 import { Filters } from "./filter";
 import { Button } from "./ui/button";
 
@@ -36,7 +37,13 @@ function Cell({
   );
 }
 
-export function SimpleDataTable({ data }: { readonly data: readonly GetMovies[] }) {
+export function SimpleDataTable({
+  data,
+  set,
+}: {
+  readonly data: readonly GetMovies[];
+  readonly set: Dispatch<GetMovies[]>;
+}) {
   const handleFavorite = async (id: string) => {
     try {
       const addFavorite = await favoriteService.addFavorite(id);
@@ -59,15 +66,11 @@ export function SimpleDataTable({ data }: { readonly data: readonly GetMovies[] 
     }
   };
 
-  const handleFilters = () => {
-    // Implement filter logic here
-  };
-
   return (
     <div className="w-full overflow-x-auto text-center">
       <div className="flex justify-between items-center p-4">
         <h1 className="text-3xl p-4 font-bold">All Movies</h1>
-        <Filters />
+        <Filters set={set} />
       </div>
       <table className="w-full border-collapse">
         <thead>

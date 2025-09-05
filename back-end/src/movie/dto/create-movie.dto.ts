@@ -27,14 +27,14 @@ export class CreateMovieDto {
   @Transform(({ value }) => value?.toString().trim())
   description: string;
 
-  @IsEnum(genreEnum, { each: true, message: 'Invalid genre' })
-  @IsNotEmpty({ message: 'Genre cannot be empty' })
-  genre: genreEnum;
-
   @IsNotEmpty({ message: 'Cover image URL cannot be empty' })
   @IsString({ message: 'Cover image URL must be a string' })
   @IsUrl({}, { message: 'Cover image must be a valid URL' })
   coverImage: string;
+
+  @IsEnum(genreEnum, { each: true, message: 'Invalid genre' })
+  @IsNotEmpty({ message: 'Genre cannot be empty' })
+  genre: genreEnum;
 
   @IsNumber({}, { message: 'Year must be a number' })
   @Min(1800, { message: 'Year must be at least 1800' })

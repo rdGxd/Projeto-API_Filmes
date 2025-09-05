@@ -4,7 +4,9 @@ import { favoriteService } from "@/services/favoriteService";
 import { TFavorite } from "@/types/favorite";
 import { formatDate } from "@/utils/date";
 import { useRouter } from "next/navigation";
+import { Dispatch } from "react";
 import { toast } from "react-toastify";
+import { Filters } from "./filter";
 import { Button } from "./ui/button";
 
 function Cell({
@@ -35,7 +37,13 @@ function Cell({
   );
 }
 
-export function SimpleDataFavorite({ data }: { readonly data: readonly TFavorite[] }) {
+export function SimpleDataFavorite({
+  data,
+  set,
+}: {
+  readonly set: Dispatch<TFavorite[]>;
+  readonly data: readonly TFavorite[];
+}) {
   const handleRemoveFavorite = async (id: string) => {
     try {
       const removeFavorite = await favoriteService.removeFavorite(id);
@@ -54,7 +62,10 @@ export function SimpleDataFavorite({ data }: { readonly data: readonly TFavorite
 
   return (
     <div className="w-full overflow-x-auto text-center">
-      <h1 className="text-3xl p-4 font-bold">Filmes Favoritados</h1>
+      <div className="flex justify-between items-center p-4">
+        <h1 className="text-3xl p-4 font-bold">Filmes Favoritados</h1>
+        <Filters set={set} />
+      </div>
       <table className="w-full border-collapse">
         <thead>
           <tr>

@@ -5,7 +5,6 @@ import { CreateMovieDto } from '../dto/create-movie.dto';
 import { FilterMovieDto } from '../dto/filter-movie.dto';
 import { UpdateMovieDto } from '../dto/update-movie.dto';
 import { Movie } from '../entities/movie.entity';
-import { genreEnum } from '../enums/genreEnum';
 import { MovieMapper } from '../mapper/movie-mapper';
 
 @Injectable()
@@ -65,25 +64,25 @@ export class MovieService {
     return this.movieMapper.toResponse(movie);
   }
 
-  async filterGenre(genre: genreEnum) {
+  async filterGenre() {
     const movies = await this.movieRepository.find({
-      where: { genre },
+      order: { genre: 'DESC' },
       relations: ['reviews', 'reviews.user'],
     });
     return movies.map((movie) => this.movieMapper.toResponse(movie));
   }
 
-  async filterYear(year: number) {
+  async filterYear() {
     const movies = await this.movieRepository.find({
-      where: { yearRelease: year },
+      order: { yearRelease: 'DESC' },
       relations: ['reviews', 'reviews.user'],
     });
     return movies.map((movie) => this.movieMapper.toResponse(movie));
   }
 
-  async filterRating(rating: number) {
+  async filterRating() {
     const movies = await this.movieRepository.find({
-      where: { rating },
+      order: { rating: 'DESC' },
       relations: ['reviews', 'reviews.user'],
     });
     return movies.map((movie) => this.movieMapper.toResponse(movie));
@@ -104,13 +103,12 @@ export class MovieService {
     if (filterDto.genre) {
       query.andWhere('movie.genre = :genre', { genre: filterDto.genre });
     }
+
     if (filterDto.year) {
       query.andWhere('movie.yearRelease = :year', { year: filterDto.year });
     }
-    if (filterDto.minRating) {
-      query.andWhere('movie.rating >= :minRating', {
-        minRating: filterDto.minRating,
-      });
+    if (filterDto.rating) {
+      query.andWhere('movie.rating = :rating', { rating: filterDto.rating });
     }
 
     const movies = await query.getMany();

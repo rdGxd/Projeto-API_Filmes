@@ -32,9 +32,8 @@ const baseConfig = (config: ConfigService) => ({
   username: config.get<string>('DATABASE_USERNAME'),
   password: config.get<string>('DATABASE_PASSWORD'),
   database: config.get<string>('DATABASE_DATABASE'),
-  synchronize: config.get<string>('DATABASE_SYNCHRONIZE') === 'true',
-  autoLoadEntities:
-    config.get<string>('DATABASE_AUTO_LOAD_ENTITIES') === 'true',
+  synchronize: Boolean(config.get<string>('DATABASE_SYNCHRONIZE')),
+  autoLoadEntities: Boolean(config.get<string>('DATABASE_AUTO_LOAD_ENTITIES')),
 });
 
 const development = (config: ConfigService) => ({

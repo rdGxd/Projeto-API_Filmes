@@ -35,13 +35,12 @@ export class User {
 
   @OneToMany(() => Favorite, (favorite) => favorite.user, {
     eager: true,
-    onDelete: 'CASCADE',
   })
   favorites: Favorite[];
 
   @OneToMany(() => Review, (review) => review.user, {
     eager: true,
-    onDelete: 'CASCADE',
+
   })
   reviews: Review[];
 }

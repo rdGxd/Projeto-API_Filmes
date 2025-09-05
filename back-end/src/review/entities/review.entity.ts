@@ -26,9 +26,9 @@ export class Review {
   @UpdateDateColumn()
   updatedAt: Date;
 
-  @ManyToOne(() => Movie, (movie) => movie.id)
+  @ManyToOne(() => Movie, (movie) => movie.id, { onDelete: 'CASCADE' })
   movie: Movie;
 
-  @ManyToOne(() => User, (user) => user.id)
+  @ManyToOne(() => User, (user) => user.id, { onDelete: 'CASCADE' })
   user: User;
 }

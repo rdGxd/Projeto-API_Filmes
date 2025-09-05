@@ -34,7 +34,7 @@ export class Movie {
 
   calcRating() {
     if (!this.reviews || this.reviews.length === 0) {
-      return 0;
+      return this.rating;
     }
     const total = this.reviews.reduce((acc, review) => acc + review.rating, 0);
     return total / this.reviews.length;

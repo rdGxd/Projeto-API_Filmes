@@ -6,4 +6,5 @@ export enum genreEnum {
   Terror = "Terror",
   Romance = "Romance",
   Animação = "Animação",
+  Fantasia = "Fantasia"
 }

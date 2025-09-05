@@ -46,5 +46,13 @@ export default function MoviesTable({ mode }: TMoviesTable) {
     };
   }, []);
 
-  return <>{mode === "favorite" ? <SimpleDataFavorite data={favorites} /> : <SimpleDataTable data={movies} />}</>;
+  return (
+    <>
+      {mode === "favorite" ? (
+        <SimpleDataFavorite data={favorites} set={setFavorites} />
+      ) : (
+        <SimpleDataTable data={movies} set={setMovies} />
+      )}
+    </>
+  );
 }

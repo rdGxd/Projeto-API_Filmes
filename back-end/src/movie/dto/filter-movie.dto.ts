@@ -38,7 +38,7 @@ export class FilterMovieDto {
     if (value === undefined || value === null || value === '') return undefined;
     return parseFloat(value);
   })
-  minRating?: number;
+  rating?: string;
 
   @IsOptional()
   @IsString({ message: 'Search must be a string' })

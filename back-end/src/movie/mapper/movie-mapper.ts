@@ -26,9 +26,9 @@ export class MovieMapper {
     response.id = movie.id;
     response.title = movie.title;
     response.description = movie.description;
-    response.yearRelease = movie.yearRelease;
+    response.yearRelease = Number(movie.yearRelease);
     response.genre = movie.genre;
-    response.rating = movie.calcRating();
+    response.rating = Number(movie.calcRating());
     response.createdAt = movie.createdAt;
     response.updatedAt = movie.updatedAt;
     response.coverImage = movie.coverImage;

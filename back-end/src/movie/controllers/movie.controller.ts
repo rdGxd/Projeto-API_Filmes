@@ -2,6 +2,7 @@ import {
   Body,
   ClassSerializerInterceptor,
   Controller,
+  Delete,
   Get,
   HttpCode,
   HttpStatus,
@@ -49,6 +50,7 @@ export class MovieController {
     console.log('Filtros aplicados:', {
       genre: filterDto.genre, // Undefined ou string sanitizada
       year: filterDto.year, // Undefined ou ano válido
+      rating: filterDto.rating, // Undefined ou rating válido
       search: filterDto.search, // Undefined ou busca sanitizada
       page: filterDto.page, // Number >= 1
       limit: filterDto.limit, // Number entre 1-100
@@ -71,5 +73,29 @@ export class MovieController {
     @Body() updateMovieDto: UpdateMovieDto,
   ) {
     return await this.movieService.update(id, updateMovieDto);
+  }
+
+  @Get('filter/genre')
+  @HttpCode(HttpStatus.OK)
+  async filterGenre() {
+    return await this.movieService.filterGenre();
+  }
+
+  @Get('filter/rating')
+  @HttpCode(HttpStatus.OK)
+  async filterRating() {
+    return await this.movieService.filterRating();
+  }
+
+  @Get('filter/year')
+  @HttpCode(HttpStatus.OK)
+  async filterYear() {
+    return await this.movieService.filterYear();
+  }
+
+  @Delete(':id')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  async remove(@Param('id', ParseUUIDPipe) id: string) {
+    return await this.movieService.remove(id);
   }
 }

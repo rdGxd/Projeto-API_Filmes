@@ -25,12 +25,18 @@ export const movieService = {
   },
 
   async getReviews(id: string) {
-    const {reviews} = await this.getById(id);
+    const { reviews } = await this.getById(id);
     return reviews as GetReviews[];
   },
 
   async delete(id: string) {
     const response = await apiWithAuth.delete(`/movie/${id}`);
     return response;
-  }
+  },
+
+  async filterMovies(filter: string) {
+    const response = await apiWithAuth.get(`/movie/filter/${filter}`);
+    console.log("Response data:", response.data);
+    return response.data;
+  },
 };

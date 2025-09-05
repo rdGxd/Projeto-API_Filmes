@@ -13,10 +13,10 @@ export class Favorite {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @ManyToOne(() => User, (user) => user.favorites)
+  @ManyToOne(() => User, (user) => user.favorites, { onDelete: 'CASCADE' })
   user: User;
 
-  @ManyToOne(() => Movie)
+  @ManyToOne(() => Movie, { onDelete: 'CASCADE' })
   movie: Movie;
 
   @CreateDateColumn()
